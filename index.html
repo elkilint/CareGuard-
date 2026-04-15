@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <style>
   :root {
-    /* Paleta de colores premium basada en la imagen */
+    /* Paleta de colores basada en la captura de pantalla */
     --color-bg-page: #f2f2f0;
-    --color-bg-doc: #f9f8f4; /* Crema de la imagen */
-    --color-bg-white: #ffffff;
-    --color-text-main: #1a1a1a;
-    --color-text-muted: #626260;
-    --color-accent-blue: #378ADD;
+    --color-bg-doc: #f9f8f4; /* El tono crema de fondo de la imagen */
+    --color-bg-card: #ffffff;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #5a5a58;
+    --color-accent-blue: #4a90e2; /* Azul para 'be present' */
     --color-border: #e2e2df;
-    --color-badge-bg: #eef5ff;
-    --color-badge-text: #185FA5;
+    --color-info-bg: #eef5ff;
+    --color-info-text: #185FA5;
     
     --radius-lg: 16px;
     --radius-md: 10px;
-    --shadow: 0 4px 20px rgba(0,0,0,0.03);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
   body { 
     background-color: var(--color-bg-page); 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--color-text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+    color: var(--color-text-primary);
     line-height: 1.6;
     padding: 40px 15px;
   }
@@ -36,17 +36,20 @@
     background: var(--color-bg-doc); 
     padding: 3.5rem 3rem; 
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
 
-  /* --- North Star Section --- */
+  /* --- North Star Card --- */
+  .north-star-card { margin-bottom: 3.5rem; }
+
   .ns-label {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     margin-bottom: 1rem;
+    opacity: 0.8;
   }
 
   .ns-title {
@@ -67,16 +70,28 @@
   }
 
   .ns-pillar {
-    background: var(--color-bg-white);
+    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    transition: transform 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  .ns-pillar-icon { font-size: 24px; margin-bottom: 10px; }
-  .ns-pillar-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .ns-pillar-desc { font-size: 13px; color: var(--color-text-muted); line-height: 1.4; }
+  .ns-pillar-icon { font-size: 24px; margin-bottom: 4px; }
+  .ns-pillar-name { font-size: 15px; font-weight: 700; color: var(--color-text-primary); }
+  .ns-pillar-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.4; }
+
+  .scroll-indicator {
+    display: flex; justify-content: center; margin-top: 2.5rem;
+  }
+  .arrow-circle {
+    width: 40px; height: 40px; border: 1px solid var(--color-border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: white; color: var(--color-text-secondary);
+  }
 
   /* --- Secciones Generales --- */
   .section { margin-bottom: 3.5rem; }
@@ -86,96 +101,82 @@
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    color: var(--color-badge-text);
-    background: var(--color-badge-bg);
+    color: var(--color-info-text);
+    background: var(--color-info-bg);
     padding: 5px 12px;
     border-radius: 6px;
     margin-bottom: 1.25rem;
     letter-spacing: 0.05em;
   }
 
-  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 1rem; line-height: 1.3; }
-  .section-body { font-size: 16px; color: var(--color-text-muted); line-height: 1.75; }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 1rem; line-height: 1.35; }
+  .section-body { font-size: 16px; color: var(--color-text-secondary); line-height: 1.75; }
 
-  /* --- Métricas --- */
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 12px;
+    margin-top: 1rem;
   }
   .metric-card {
-    background: var(--color-bg-white);
+    background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 1.5rem 1rem;
     text-align: center;
+    box-shadow: var(--shadow-sm);
   }
-  .metric-value { font-size: 26px; font-weight: 800; color: var(--color-badge-text); }
-  .metric-label { font-size: 12px; color: var(--color-text-muted); margin-top: 6px; font-weight: 500; }
+  .metric-value { font-size: 26px; font-weight: 800; color: var(--color-info-text); }
+  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 6px; font-weight: 500; }
 
-  /* --- Listas de Pasos --- */
+  .divider { border: none; border-top: 1px solid var(--color-border); margin: 3.5rem 0; }
+
+  /* --- Listas y Citas --- */
   .steps-list { list-style: none; margin-top: 1.5rem; }
   .steps-list li {
-    display: flex;
-    gap: 18px;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--color-border);
+    display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--color-border);
   }
   .steps-list li:last-child { border-bottom: none; }
   .step-num {
-    width: 28px; height: 28px; background: var(--color-badge-text); color: white;
+    width: 28px; height: 28px; background: var(--color-info-text); color: white;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: bold; flex-shrink: 0;
   }
 
-  /* --- Bloques de Citas --- */
   .quote-block {
     border-left: 4px solid var(--color-accent-blue);
     padding: 1.75rem;
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.5);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     margin: 2rem 0;
   }
-  .quote-text { font-size: 17px; font-style: italic; color: var(--color-text-main); font-weight: 400; }
-  .quote-attr { font-size: 14px; font-weight: 600; color: var(--color-text-muted); margin-top: 1rem; }
-
-  .divider { border: none; border-top: 1px solid var(--color-border); margin: 3.5rem 0; }
+  .quote-text { font-size: 17px; font-style: italic; color: var(--color-text-primary); }
+  .quote-attr { font-size: 14px; font-weight: 600; color: var(--color-text-secondary); margin-top: 1rem; }
 
   /* --- FAQ --- */
-  .faq-card {
-    padding: 16px 20px; 
-    background: var(--color-bg-white); 
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    margin-bottom: 14px;
+  .faq-container { display: flex; flex-direction: column; gap: 12px; margin-top: 1.5rem; }
+  .faq-item {
+    padding: 16px 20px; background: var(--color-bg-card); border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
   }
-  .faq-q { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--color-text-main); }
-  .faq-a { font-size: 14px; color: var(--color-text-muted); line-height: 1.6; }
+  .faq-q { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .faq-a { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
 
   /* --- CTA --- */
   .cta-box {
-    background: var(--color-badge-text);
+    background: var(--color-info-text);
     color: white;
-    padding: 3rem 2rem;
+    padding: 3.5rem 2rem;
     border-radius: var(--radius-lg);
     text-align: center;
     margin-top: 4rem;
   }
-  .cta-title { font-size: 24px; font-weight: 700; margin-bottom: 1rem; }
-  .cta-body { font-size: 16px; opacity: 0.9; margin-bottom: 2rem; }
+  .cta-title { font-size: 26px; font-weight: 700; margin-bottom: 1rem; }
+  .cta-body { font-size: 16px; opacity: 0.9; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
   .cta-btn {
-    background: white; color: var(--color-badge-text); padding: 14px 32px;
+    background: white; color: var(--color-info-text); padding: 14px 32px;
     border-radius: var(--radius-md); font-weight: 700; border: none; cursor: pointer;
-    font-size: 15px; text-decoration: none; display: inline-block;
-  }
-
-  .scroll-down {
-    display: flex; justify-content: center; margin-top: 2.5rem;
-  }
-  .arrow {
-    width: 40px; height: 40px; border: 1px solid var(--color-border);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: white; color: var(--color-text-muted);
+    font-size: 15px; transition: opacity 0.2s;
   }
 </style>
 </head>
@@ -211,8 +212,8 @@
       </div>
     </div>
     
-    <div class="scroll-down">
-      <div class="arrow">↓</div>
+    <div class="scroll-indicator">
+      <div class="arrow-circle">↓</div>
     </div>
   </div>
 
@@ -221,77 +222,112 @@
     <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-value">&lt; 60s</div>
-        <div class="metric-label">Alert time on incident</div>
+        <div class="metric-label">Alert time on incident detection</div>
       </div>
       <div class="metric-card">
         <div class="metric-value">95%</div>
-        <div class="metric-label">Families with peace of mind</div>
+        <div class="metric-label">Families reporting real peace of mind</div>
       </div>
       <div class="metric-card">
         <div class="metric-value">4.8★</div>
-        <div class="metric-label">User satisfaction score</div>
+        <div class="metric-label">Satisfaction score from elderly users</div>
       </div>
       <div class="metric-card">
         <div class="metric-value">+30%</div>
-        <div class="metric-label">Hosp. reduction rate</div>
+        <div class="metric-label">Reduction in preventable hospitalizations</div>
       </div>
     </div>
   </div>
 
   <hr class="divider">
 
+  <div style="margin-bottom:2rem;">
+    <div class="ns-label" style="margin-bottom:0.4rem;">Internal press release · Confidential</div>
+    <div style="font-size:13px; color: var(--color-text-secondary);">Amazon Working Backwards style · PR/FAQ</div>
+  </div>
+
   <div class="section">
-    <div class="ns-label">Internal press release · Confidential</div>
-    <div style="font-size:13px; color: var(--color-text-muted); margin-bottom: 2rem;">Amazon Working Backwards style · PR/FAQ</div>
-    
     <div class="section-badge">1 · Headline</div>
-    <div class="section-title">"CareGuard launches the first intelligent family monitoring platform that lets adult children care for their parents from anywhere in the world."</div>
-    
-    <div class="section-badge" style="margin-top: 2rem;">2 · Subheadline</div>
+    <div class="section-title">"CareGuard launches the first intelligent family monitoring platform that lets adult children care for their parents from anywhere in the world — no invasive cameras, no false alarms."</div>
+  </div>
+
+  <div class="section">
+    <div class="section-badge">2 · Subheadline</div>
     <p class="section-body">CareGuard combines discreet motion sensors, artificial intelligence, and a unified family dashboard so that children, grandchildren, and caregivers receive only the alerts that truly matter.</p>
   </div>
 
   <div class="section">
-    <div class="section-badge">4 · The problem</div>
-    <div class="section-title">Millions of families live with constant anxiety.</div>
-    <p class="section-body">Current options are extreme: hire a full-time caregiver (expensive), install cameras (intrusive), or wait for the phone to ring. CareGuard solves the "not knowing" without violating dignity.</p>
+    <div class="section-badge">3 · Opening paragraph</div>
+    <p class="section-body">Today, CareGuard announces the launch of its remote care platform designed for families with elderly parents or loved ones managing chronic health conditions. Available via mobile app (iOS and Android) and a web dashboard accessible from any country, the platform is installed in the loved one's home in under 30 minutes.</p>
   </div>
 
   <div class="section">
-    <div class="section-badge">6 · Executive quote</div>
+    <div class="section-badge">4 · The problem</div>
+    <div class="section-title">Millions of families live with the constant anxiety of not knowing.</div>
+    <p class="section-body">An elderly parent living alone creates relentless worry. The current options are extreme: expensive caregivers, intrusive cameras, or simply waiting for the phone to ring. The result is a family living with chronic anxiety.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-badge">5 · The solution</div>
+    <div class="section-title">Intelligent presence, not surveillance.</div>
+    <p class="section-body">CareGuard installs motion, temperature, and door sensors. The AI learns the elderly person's daily patterns. When something deviates from normal, the family gets a clear alert on their phone. No cameras. No microphones. Just a signal when something needs attention.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-badge">6 · Internal executive quote</div>
     <div class="quote-block">
-      <div class="quote-text">"Elder care is one of the most deeply human problems. Families don't need more data — they need certainty. CareGuard delivers that without turning a home into a surveillance room."</div>
+      <p class="quote-text">"Elder care is one of the most deeply human problems and one of the most technologically neglected. Families don't need more data — they need certainty."</p>
       <div class="quote-attr">— Chief Product Officer, CareGuard</div>
     </div>
   </div>
 
   <div class="section">
     <div class="section-badge">7 · How it works</div>
-    <div class="section-title">From unboxing to peace of mind.</div>
+    <div class="section-title">From unboxing to peace of mind in under an hour.</div>
     <ol class="steps-list">
-      <li><div class="step-num">1</div><div><strong>Profile Setup:</strong> Enter routines, health conditions, and emergency contacts.</div></li>
-      <li><div class="step-num">2</div><div><strong>Easy Install:</strong> Stick wireless sensors on doors and hallways (no tools needed).</div></li>
-      <li><div class="step-num">3</div><div><strong>AI Learning:</strong> The system learns lifestyle rhythms during the first 7 days.</div></li>
-      <li><div class="step-num">4</div><div><strong>Smart Alerts:</strong> Notifications only when movement patterns deviate significantly.</div></li>
+      <li><div class="step-num">1</div><div><strong>Profile Setup:</strong> The family downloads the app and creates a profile with routines and emergency contacts.</div></li>
+      <li><div class="step-num">2</div><div><strong>Easy Install:</strong> Wireless sensors simply stick on doors and hallways (no tools needed).</div></li>
+      <li><div class="step-num">3</div><div><strong>AI Learning:</strong> During the first 7 days, the AI learns the person's lifestyle rhythm.</div></li>
+      <li><div class="step-num">4</div><div><strong>Smart Alerts:</strong> If something is off — no movement for 2 hours during active hours — the family gets an alert.</div></li>
+      <li><div class="step-num">5</div><div><strong>Emergency Protocol:</strong> CareGuard can contact local emergency services with location and medical history.</div></li>
+      <li><div class="step-num">6</div><div><strong>Shared Care:</strong> Access can be shared with siblings, doctors, or nurses with differentiated permissions.</div></li>
     </ol>
   </div>
 
   <div class="section">
-    <div class="section-badge">+ · Critical FAQ</div>
-    <div class="faq-card">
-      <div class="faq-q">What if they don't want to be "monitored"?</div>
-      <div class="faq-a">The design starts from consent. No cameras, no mics. The elderly person can pause alerts anytime with a physical button.</div>
+    <div class="section-badge">8 · Customer quote</div>
+    <div class="quote-block">
+      <p class="quote-text">"My dad is 78 and lives alone in Medellín. I'm in Toronto. Since we set up CareGuard, I get a summary every morning and only get alerted if something seems wrong. It saved both of our lives."</p>
+      <div class="quote-attr">— Camila R., 42, daughter and user · Toronto, Canada</div>
     </div>
-    <div class="faq-card">
-      <div class="faq-q">How many false alarms will I receive?</div>
-      <div class="faq-a">Our AI filters noise. Once calibrated, users typically receive only 2-3 meaningful alerts per week.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-badge">+ · Critical FAQ</div>
+    <div class="faq-container">
+      <div class="faq-item">
+        <div class="faq-q">What if the elderly person doesn't want to be "monitored"?</div>
+        <div class="faq-a">No cameras or microphones. The experience is framed as safety, and there is a physical button to pause alerts during private moments.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How many false alarms will I receive?</div>
+        <div class="faq-a">The AI filters noise. After calibration, families typically receive only 2–3 meaningful alerts per week.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if the power or WiFi goes out?</div>
+        <div class="faq-a">Sensors have a 48-hour backup battery. If connection is lost for 30 minutes, the family receives a "signal lost" alert.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can multiple family members have access?</div>
+        <div class="faq-a">Yes. A family plan includes unlimited access for family members plus professional access for caregivers or doctors.</div>
+      </div>
     </div>
   </div>
 
   <div class="cta-box">
-    <div class="cta-title">Get started today — first month free</div>
+    <h2 class="cta-title">Get started today — first month free</h2>
     <p class="cta-body">Download the app, request your sensor kit, and try CareGuard free for 30 days. No commitments.</p>
-    <a href="#" class="cta-btn">Define business model and pricing ↗</a>
+    <button class="cta-btn">Define business model and pricing ↗</button>
   </div>
 
 </div>
