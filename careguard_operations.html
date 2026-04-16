@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Operational Model</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#1a1a1a;padding:2rem 1.5rem;font-size:14px}
+  .doc{max-width:920px;margin:0 auto}
+  h1{font-size:26px;font-weight:500;color:#111;margin-bottom:.25rem}
+  .subtitle{font-size:14px;color:#888;margin-bottom:2.5rem}
+  .badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:8px;margin-bottom:.6rem}
+  .section{margin-bottom:2.5rem}
+  .section-title{font-size:17px;font-weight:500;color:#111;margin-bottom:.6rem}
+  .body-text{font-size:14px;color:#555;line-height:1.75}
+  .divider{border:none;border-top:1px solid #e8e8e4;margin:2rem 0}
+
+  /* Team evolution */
+  .phase-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:1rem}
+  .phase-box{background:#fff;border:1px solid #e0ddd5;border-radius:14px;padding:1.25rem}
+  .phase-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#999;margin-bottom:3px}
+  .phase-title{font-size:15px;font-weight:500;color:#111;margin-bottom:2px}
+  .phase-period{font-size:12px;color:#185FA5;font-weight:500;margin-bottom:10px}
+  .role-list{display:flex;flex-direction:column;gap:7px}
+  .role-item{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 10px;background:#f8f8f6;border-radius:8px;font-size:12px}
+  .role-name{font-weight:500;color:#111}
+  .role-note{color:#888;font-size:11px;margin-top:1px}
+  .role-comp{color:#185FA5;font-weight:500;white-space:nowrap;margin-left:10px}
+  .phase-total{margin-top:10px;padding:8px 10px;background:#E6F1FB;border-radius:8px;font-size:12px;font-weight:600;color:#185FA5;display:flex;justify-content:space-between}
+
+  /* Process flows */
+  .process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:1rem}
+  .process-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem}
+  .process-name{font-size:14px;font-weight:500;color:#111;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #eee}
+  .process-steps{display:flex;flex-direction:column;gap:0}
+  .pstep{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dotted #eee;font-size:12px;color:#555;line-height:1.5}
+  .pstep:last-child{border-bottom:none}
+  .pnum{min-width:20px;height:20px;border-radius:50%;background:#185FA5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+  .pstep-owner{font-size:10px;color:#185FA5;font-weight:600;white-space:nowrap;margin-left:auto;padding-left:8px}
+
+  /* KPI dashboard */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-top:1rem}
+  .kpi-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1rem}
+  .kpi-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+  .kpi-name{font-size:12px;color:#555;margin-bottom:2px;line-height:1.4}
+  .kpi-target{font-size:18px;font-weight:500;color:#111}
+  .kpi-freq{font-size:10px;color:#999;margin-top:2px}
+
+  /* Tech stack */
+  .stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:1rem}
+  .stack-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1rem}
+  .stack-layer{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#999;margin-bottom:5px}
+  .stack-name{font-size:13px;font-weight:500;color:#111;margin-bottom:4px}
+  .stack-tools{font-size:11px;color:#666;line-height:1.6}
+  .stack-cost{font-size:12px;color:#185FA5;font-weight:500;margin-top:6px}
+
+  /* Risks */
+  .risk-table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:12px}
+  .risk-table th{text-align:left;padding:8px 12px;background:#111;color:#fff;font-weight:600}
+  .risk-table td{padding:8px 12px;border-bottom:1px solid #eee;color:#555;vertical-align:top}
+  .risk-table tr:last-child td{border-bottom:none}
+  .risk-table tr:nth-child(even) td{background:#fafafa}
+  .sev{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600}
+  .sev-h{background:#FCEBEB;color:#A32D2D}
+  .sev-m{background:#FAEEDA;color:#854F0B}
+  .sev-l{background:#EAF3DE;color:#3B6D11}
+
+  /* OKRs */
+  .okr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:1rem}
+  .okr-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem}
+  .okr-quarter{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#185FA5;margin-bottom:5px}
+  .okr-objective{font-size:13px;font-weight:500;color:#111;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee;line-height:1.4}
+  .kr-list{display:flex;flex-direction:column;gap:5px}
+  .kr-item{font-size:12px;color:#555;line-height:1.5;padding-left:12px;position:relative}
+  .kr-item::before{content:"→";position:absolute;left:0;color:#185FA5;font-weight:700}
+
+  /* Supply chain */
+  .supply-steps{display:flex;flex-wrap:wrap;gap:0;margin-top:1rem}
+  .supply-step{flex:1;min-width:140px;background:#fff;border:1px solid #e0ddd5;padding:1rem;position:relative}
+  .supply-step:not(:last-child)::after{content:"▶";position:absolute;right:-10px;top:50%;transform:translateY(-50%);color:#185FA5;font-size:12px;z-index:2;background:#f8f8f6;padding:0 2px}
+  .supply-step-num{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+  .supply-step-name{font-size:13px;font-weight:500;color:#111;margin-bottom:4px}
+  .supply-step-desc{font-size:11px;color:#666;line-height:1.5}
+  .supply-step-time{font-size:11px;color:#185FA5;font-weight:600;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div style="margin-bottom:2.5rem">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:.4rem">CareGuard · Confidential</div>
+    <h1>Operational Model</h1>
+    <div class="subtitle">Team structure · Processes · Tech stack · KPIs · Risk register · OKRs — Years 1–5</div>
+  </div>
+
+  <!-- OPERATING PHILOSOPHY -->
+  <div class="section">
+    <div class="badge">Operating philosophy</div>
+    <div class="section-title">Do more with less — automate everything that doesn't require a human</div>
+    <div class="body-text">With 1–3 founders and under $50K, every hour of human time is precious. CareGuard's operational model is built on radical automation of repetitive tasks (onboarding, billing, support tier-1, AI monitoring) so the founding team can focus on the two things that only humans can do well at this stage: talking to customers and making product decisions. The org chart expands only when a specific function is provably overwhelmed.</div>
+  </div>
+
+  <!-- TEAM EVOLUTION -->
+  <div class="section">
+    <div class="badge">Team structure & evolution</div>
+    <div class="section-title">Hiring driven by bottlenecks, not vanity headcount</div>
+    <div class="phase-tabs">
+
+      <div class="phase-box">
+        <div class="phase-label">Phase 1</div>
+        <div class="phase-title">Founding team</div>
+        <div class="phase-period">Months 1–12 · Year 1</div>
+        <div class="role-list">
+          <div class="role-item">
+            <div><div class="role-name">CEO / Product</div><div class="role-note">Customer interviews, roadmap, fundraising</div></div>
+            <div class="role-comp">$20K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">CTO / Engineering</div><div class="role-note">App, AI, hardware integration, infra</div></div>
+            <div class="role-comp">$20K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">Growth / Ops</div><div class="role-note">Marketing, onboarding, customer success</div></div>
+            <div class="role-comp">$20K</div>
+          </div>
+        </div>
+        <div class="phase-total"><span>Total payroll</span><span>$60K / yr (equity-heavy)</span></div>
+      </div>
+
+      <div class="phase-box" style="border-color:#378ADD">
+        <div class="phase-label">Phase 2</div>
+        <div class="phase-title">First hires</div>
+        <div class="phase-period">Months 13–24 · Year 2</div>
+        <div class="role-list">
+          <div class="role-item">
+            <div><div class="role-name">Founding team (×3)</div><div class="role-note">Salary increase as MRR grows</div></div>
+            <div class="role-comp">$90K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">Customer Success Lead</div><div class="role-note">Onboarding, retention, NPS programs</div></div>
+            <div class="role-comp">$55K</div>
+          </div>
+        </div>
+        <div class="phase-total"><span>Total payroll</span><span>$145K / yr</span></div>
+      </div>
+
+      <div class="phase-box">
+        <div class="phase-label">Phase 3</div>
+        <div class="phase-title">Growth team</div>
+        <div class="phase-period">Year 3 · Post-seed</div>
+        <div class="role-list">
+          <div class="role-item">
+            <div><div class="role-name">Core team (×4)</div><div class="role-note">Salaries normalized post-seed</div></div>
+            <div class="role-comp">$140K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">Full-stack Engineer</div><div class="role-note">AI/ML features, mobile app</div></div>
+            <div class="role-comp">$75K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">Marketing Manager</div><div class="role-note">Paid acquisition, content, LATAM</div></div>
+            <div class="role-comp">$60K</div>
+          </div>
+          <div class="role-item">
+            <div><div class="role-name">Ops / Supply Chain</div><div class="role-note">Hardware, logistics, fulfillment</div></div>
+            <div class="role-comp">$55K</div>
+          </div>
+        </div>
+        <div class="phase-total"><span>Total payroll</span><span>~$250K / yr</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CORE PROCESSES -->
+  <div class="section">
+    <div class="badge">Core operational processes</div>
+    <div class="section-title">How the business runs day to day</div>
+    <div class="process-grid">
+
+      <div class="process-card">
+        <div class="process-name">Customer acquisition → activation</div>
+        <div class="process-steps">
+          <div class="pstep"><div class="pnum">1</div><div>Ad or referral click → landing page (EN/ES) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">2</div><div>Free trial signup → profile creation in app <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">3</div><div>Kit order placed → fulfillment partner ships (3–5 days US, 7–12 LATAM) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">4</div><div>In-app guided setup flow (30 min) — no human needed <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">5</div><div>AI learning period (7 days) → welcome email sequence <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">6</div><div>Day 14 NPS survey + referral program activation <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">7</div><div>Trial → paid conversion prompt at day 28 <span class="pstep-owner">Auto</span></div></div>
+        </div>
+      </div>
+
+      <div class="process-card">
+        <div class="process-name">AI monitoring → alert flow</div>
+        <div class="process-steps">
+          <div class="pstep"><div class="pnum">1</div><div>Sensors transmit data every 60s to cloud (AWS IoT) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">2</div><div>ML model compares vs personal baseline <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">3</div><div>Anomaly detected → scoring engine assigns priority (Low/Med/High) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">4</div><div>Low: logged in daily summary only <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">5</div><div>Medium: push notification to family app <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">6</div><div>High: push + SMS + optional emergency dispatch call <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">7</div><div>Family confirms / dismisses alert → feedback improves model <span class="pstep-owner">Human</span></div></div>
+        </div>
+      </div>
+
+      <div class="process-card">
+        <div class="process-name">Customer support flow</div>
+        <div class="process-steps">
+          <div class="pstep"><div class="pnum">1</div><div>Issue raised via in-app chat or email <span class="pstep-owner">Human</span></div></div>
+          <div class="pstep"><div class="pnum">2</div><div>AI chatbot handles Tier 1 (FAQ, setup, connectivity — ~60% of tickets) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">3</div><div>Unresolved → routed to CS queue (Intercom / Freshdesk) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">4</div><div>Human CS resolves Tier 2 (account, billing, hardware) within 4h <span class="pstep-owner">Human</span></div></div>
+          <div class="pstep"><div class="pnum">5</div><div>Tier 3 (technical bugs, AI errors) escalated to CTO <span class="pstep-owner">Human</span></div></div>
+          <div class="pstep"><div class="pnum">6</div><div>CSAT survey sent post-resolution — NPS tracked weekly <span class="pstep-owner">Auto</span></div></div>
+        </div>
+      </div>
+
+      <div class="process-card">
+        <div class="process-name">Retention & churn prevention</div>
+        <div class="process-steps">
+          <div class="pstep"><div class="pnum">1</div><div>Churn risk model flags subs with declining engagement at day 30/60/90 <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">2</div><div>Automated re-engagement email sequence (3 touches) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">3</div><div>High-risk subscribers get personal outreach from CS team <span class="pstep-owner">Human</span></div></div>
+          <div class="pstep"><div class="pnum">4</div><div>Cancellation intent → save flow (pause option, downgrade offer) <span class="pstep-owner">Auto</span></div></div>
+          <div class="pstep"><div class="pnum">5</div><div>Churned sub → exit survey + 90-day win-back sequence <span class="pstep-owner">Auto</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SUPPLY CHAIN -->
+  <div class="section">
+    <div class="badge">Hardware supply chain</div>
+    <div class="section-title">Lean, outsourced, asset-light</div>
+    <div class="supply-steps">
+      <div class="supply-step" style="border-radius:12px 0 0 12px">
+        <div class="supply-step-num">Step 1</div>
+        <div class="supply-step-name">Sourcing</div>
+        <div class="supply-step-desc">Off-the-shelf Zigbee/Z-Wave sensors (Aqara / Sonoff). Custom firmware + CareGuard branding. Min order: 200 units.</div>
+        <div class="supply-step-time">Lead: 8–12 weeks</div>
+      </div>
+      <div class="supply-step">
+        <div class="supply-step-num">Step 2</div>
+        <div class="supply-step-name">Assembly & QA</div>
+        <div class="supply-step-desc">3PL partner does kitting + quality check + packaging. CareGuard-branded box with quick-start guide (EN + ES).</div>
+        <div class="supply-step-time">Lead: 1–2 weeks</div>
+      </div>
+      <div class="supply-step">
+        <div class="supply-step-num">Step 3</div>
+        <div class="supply-step-name">Fulfillment</div>
+        <div class="supply-step-desc">ShipBob (US) / Melonn (LATAM). Orders triggered automatically at checkout. Real-time tracking in app.</div>
+        <div class="supply-step-time">US: 3–5 days</div>
+      </div>
+      <div class="supply-step">
+        <div class="supply-step-num">Step 4</div>
+        <div class="supply-step-name">Returns</div>
+        <div class="supply-step-desc">30-day return window. Defective unit replacements shipped same day. Returned units refurbished and resold at 10% discount.</div>
+        <div class="supply-step-time">Target: &lt;3% return rate</div>
+      </div>
+      <div class="supply-step" style="border-radius:0 12px 12px 0">
+        <div class="supply-step-num">Step 5</div>
+        <div class="supply-step-name">Inventory mgmt</div>
+        <div class="supply-step-desc">6-week safety stock target. Reorder triggered at 4-week coverage. Demand forecast from subscriber growth model.</div>
+        <div class="supply-step-time">Review: monthly</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="badge">Technology stack</div>
+    <div class="section-title">Year 1 stack — lean, proven tools, minimal build</div>
+    <div class="stack-grid">
+      <div class="stack-card">
+        <div class="stack-layer">Mobile app</div>
+        <div class="stack-name">React Native</div>
+        <div class="stack-tools">Single codebase for iOS + Android. Expo for rapid iteration. Push notifications via Firebase. Family dashboard + alert feed.</div>
+        <div class="stack-cost">~$0/mo (dev cost only)</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-layer">IoT & sensors</div>
+        <div class="stack-name">AWS IoT Core</div>
+        <div class="stack-tools">MQTT protocol for sensor data. DynamoDB for time-series storage. Lambda for real-time event processing. Custom anomaly detection model.</div>
+        <div class="stack-cost">~$200–400/mo @ 1K subs</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-layer">AI / ML</div>
+        <div class="stack-name">Python + SageMaker</div>
+        <div class="stack-tools">Behavioral baseline model per subscriber. Anomaly scoring engine. Retrained weekly per user. Initially rule-based, evolves to full ML by Year 2.</div>
+        <div class="stack-cost">~$300–600/mo @ 1K subs</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-layer">Backend / API</div>
+        <div class="stack-name">Node.js + Supabase</div>
+        <div class="stack-tools">REST API for app. Supabase for auth + postgres. Stripe for billing. Serverless functions for alert routing and notifications.</div>
+        <div class="stack-cost">~$150/mo @ 1K subs</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-layer">Comms & alerts</div>
+        <div class="stack-name">Twilio + SendGrid</div>
+        <div class="stack-tools">SMS alerts (Twilio). Email sequences (SendGrid). WhatsApp Business API for LATAM users. Push via Firebase Cloud Messaging.</div>
+        <div class="stack-cost">~$200/mo @ 1K subs</div>
+      </div>
+      <div class="stack-card">
+        <div class="stack-layer">CRM & Support</div>
+        <div class="stack-name">Intercom + Stripe</div>
+        <div class="stack-tools">In-app chat, onboarding flows, NPS surveys (Intercom). Subscription billing + dunning (Stripe). Referral tracking via ReferralHero.</div>
+        <div class="stack-cost">~$300/mo @ 1K subs</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem;font-size:13px;color:#555">Total estimated infra cost at 1,000 subscribers: <strong>~$1,150–1,650/mo</strong> (~9% of sub revenue — well within the 18% COGS target).</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- KPI DASHBOARD -->
+  <div class="section">
+    <div class="badge">KPI dashboard</div>
+    <div class="section-title">Metrics that matter — reviewed weekly by the founding team</div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#185FA5">Growth</div>
+        <div class="kpi-name">New subscribers / month</div>
+        <div class="kpi-target">+12% MoM</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#185FA5">Growth</div>
+        <div class="kpi-name">Trial → paid conversion rate</div>
+        <div class="kpi-target">&gt; 65%</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#3B6D11">Retention</div>
+        <div class="kpi-name">Monthly churn rate</div>
+        <div class="kpi-target">&lt; 4% Y1 / &lt; 3% Y2</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#3B6D11">Retention</div>
+        <div class="kpi-name">Net Promoter Score (NPS)</div>
+        <div class="kpi-target">&gt; 55</div>
+        <div class="kpi-freq">Reviewed: monthly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#854F0B">Economics</div>
+        <div class="kpi-name">MRR (monthly recurring rev)</div>
+        <div class="kpi-target">$2,550 → $19K Y1</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#854F0B">Economics</div>
+        <div class="kpi-name">Blended CAC</div>
+        <div class="kpi-target">&lt; $55 Y1 / &lt; $40 Y2</div>
+        <div class="kpi-freq">Reviewed: monthly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#854F0B">Economics</div>
+        <div class="kpi-name">LTV : CAC ratio</div>
+        <div class="kpi-target">&gt; 5x Y1 / &gt; 8x Y2</div>
+        <div class="kpi-freq">Reviewed: monthly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#A32D2D">Product</div>
+        <div class="kpi-name">False alert rate</div>
+        <div class="kpi-target">&lt; 15% of all alerts</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#A32D2D">Product</div>
+        <div class="kpi-name">Alert response time (P95)</div>
+        <div class="kpi-target">&lt; 60 seconds</div>
+        <div class="kpi-freq">Reviewed: daily</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#A32D2D">Product</div>
+        <div class="kpi-name">App uptime / SLA</div>
+        <div class="kpi-target">99.5% uptime</div>
+        <div class="kpi-freq">Reviewed: daily</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#534AB7">Support</div>
+        <div class="kpi-name">Ticket resolution time</div>
+        <div class="kpi-target">&lt; 4 hours (Tier 2)</div>
+        <div class="kpi-freq">Reviewed: daily</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-category" style="color:#534AB7">Support</div>
+        <div class="kpi-name">Referral conversion rate</div>
+        <div class="kpi-target">&gt; 25% of referral links</div>
+        <div class="kpi-freq">Reviewed: weekly</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- OKRs -->
+  <div class="section">
+    <div class="badge">OKRs — Year 1</div>
+    <div class="section-title">Quarterly objectives and key results</div>
+    <div class="okr-grid">
+      <div class="okr-card">
+        <div class="okr-quarter">Q1 2026</div>
+        <div class="okr-objective">Prove that families will pay before we scale anything</div>
+        <div class="kr-list">
+          <div class="kr-item">50 paying subscribers by end of Q1</div>
+          <div class="kr-item">Trial → paid conversion &gt; 50%</div>
+          <div class="kr-item">NPS from first cohort &gt; 45</div>
+          <div class="kr-item">Average setup time &lt; 45 minutes</div>
+        </div>
+      </div>
+      <div class="okr-card">
+        <div class="okr-quarter">Q2 2026</div>
+        <div class="okr-objective">Activate the referral flywheel and prove word-of-mouth</div>
+        <div class="kr-list">
+          <div class="kr-item">200 active subscribers</div>
+          <div class="kr-item">&gt; 30 conversions from referral program</div>
+          <div class="kr-item">Monthly churn &lt; 5%</div>
+          <div class="kr-item">First LATAM beta users (Colombia) — 20 subs</div>
+        </div>
+      </div>
+      <div class="okr-card">
+        <div class="okr-quarter">Q3 2026</div>
+        <div class="okr-objective">Pour fuel on what works — scale the acquisition engine</div>
+        <div class="kr-list">
+          <div class="kr-item">600 active subscribers</div>
+          <div class="kr-item">Meta Ads CAC &lt; $45</div>
+          <div class="kr-item">MRR &gt; $10,200</div>
+          <div class="kr-item">Colombia + Mexico officially launched</div>
+        </div>
+      </div>
+      <div class="okr-card">
+        <div class="okr-quarter">Q4 2026</div>
+        <div class="okr-objective">Exit the year with proof for seed investors</div>
+        <div class="kr-list">
+          <div class="kr-item">1,000 active subscribers</div>
+          <div class="kr-item">MRR &gt; $17,000</div>
+          <div class="kr-item">Annual churn &lt; 40% (monthly &lt; 4%)</div>
+          <div class="kr-item">Seed deck ready — 3 investor conversations started</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISK REGISTER -->
+  <div class="section">
+    <div class="badge">Risk register</div>
+    <div class="section-title">Top risks and mitigation strategies</div>
+    <table class="risk-table">
+      <tr>
+        <th style="width:22%">Risk</th>
+        <th style="width:10%">Severity</th>
+        <th style="width:10%">Likelihood</th>
+        <th style="width:30%">Impact</th>
+        <th style="width:28%">Mitigation</th>
+      </tr>
+      <tr>
+        <td><strong>Hardware supply delay</strong> — manufacturer lead times extend</td>
+        <td><span class="sev sev-h">High</span></td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td>Can't ship kits → trials stall → cash burns on marketing with no conversions</td>
+        <td>Maintain 6-week safety stock. Dual-source from 2 suppliers. Offer "pre-order with discount" to manage demand.</td>
+      </tr>
+      <tr>
+        <td><strong>AI false alert rate too high</strong> — erodes family trust</td>
+        <td><span class="sev sev-h">High</span></td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td>High churn, negative NPS, word-of-mouth reversal — the worst outcome for a safety product</td>
+        <td>7-day learning period before alerts go live. Manual override always available. Feedback loop retrains model continuously. Alert rate KPI reviewed weekly.</td>
+      </tr>
+      <tr>
+        <td><strong>High early churn</strong> — trial users don't convert</td>
+        <td><span class="sev sev-h">High</span></td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td>CAC payback never achieved, burn accelerates, model breaks down</td>
+        <td>Founders personally onboard first 50 families. Exit survey on every cancel. Build "sticky moment" — ensure family receives one real alert in first 30 days.</td>
+      </tr>
+      <tr>
+        <td><strong>LATAM payment infrastructure</strong> — local methods complex</td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td><span class="sev sev-h">High</span></td>
+        <td>LATAM conversion rates suffer; diaspora family paying for parent abroad is easier path</td>
+        <td>Phase 1: diaspora pays in USD for LATAM parent. Phase 2: integrate Mercado Pago + PSE via Stripe LATAM. Don't over-build locally before proving demand.</td>
+      </tr>
+      <tr>
+        <td><strong>Competitor enters the space</strong> — Ring, Google add elder care mode</td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td><span class="sev sev-l">Low</span></td>
+        <td>Could commoditize the product in the US market within 18–24 months</td>
+        <td>Own the LATAM + diaspora niche — big tech won't localize for this. Build proprietary behavioral AI as the defensible moat. Speed of iteration beats resources.</td>
+      </tr>
+      <tr>
+        <td><strong>Founder burnout</strong> — 1–3 people doing everything</td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td>Product quality degrades, customer response slows, co-founder conflicts emerge</td>
+        <td>Automate Tier 1 support from Day 1. Hard rule: no founder works more than 55hrs/week sustained. First hire at 200 subs covers CS load. Equity vesting with cliff protects against early split.</td>
+      </tr>
+      <tr>
+        <td><strong>Data privacy / regulatory</strong> — health data laws in US + LATAM</td>
+        <td><span class="sev sev-m">Medium</span></td>
+        <td><span class="sev sev-l">Low</span></td>
+        <td>HIPAA, GDPR-LATAM, CCPA exposure if not handled correctly from Day 1</td>
+        <td>Legal review of privacy policy before launch ($2–4K). No biometric data collected — motion only. Data stored in country of origin where possible. No data sold, ever.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background:#111;border-radius:14px;padding:1.5rem;text-align:center;margin-top:2rem">
+    <div style="font-size:16px;font-weight:500;color:#fff;margin-bottom:.4rem">The one operational metric that predicts everything else</div>
+    <div style="font-size:14px;color:#aaa;line-height:1.7;max-width:600px;margin:0 auto">"If a family stays for 6 months, they almost never leave. Every operational decision — from setup time to alert accuracy to CS response — is in service of getting a family through those first 6 months successfully."</div>
+  </div>
+
+</div>
+</body>
+</html>
