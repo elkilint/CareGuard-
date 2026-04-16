@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Go-to-Market Strategy</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#1a1a1a;padding:2rem 1.5rem;font-size:14px}
+  .doc{max-width:900px;margin:0 auto}
+  h1{font-size:26px;font-weight:500;color:#111;margin-bottom:.25rem}
+  .subtitle{font-size:14px;color:#888;margin-bottom:2.5rem}
+  .section{margin-bottom:2.5rem}
+  .badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#185FA5;background:#E6F1FB;padding:3px 10px;border-radius:8px;margin-bottom:.6rem}
+  .section-title{font-size:17px;font-weight:500;color:#111;margin-bottom:.6rem;line-height:1.35}
+  .body-text{font-size:14px;color:#555;line-height:1.75}
+  .divider{border:none;border-top:1px solid #e8e8e4;margin:2rem 0}
+
+  /* Phase timeline */
+  .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:1rem}
+  .phase-card{background:#fff;border:1px solid #e0ddd5;border-radius:14px;padding:1.25rem;position:relative}
+  .phase-num{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:4px}
+  .phase-name{font-size:15px;font-weight:500;color:#111;margin-bottom:3px}
+  .phase-period{font-size:12px;color:#185FA5;font-weight:500;margin-bottom:10px}
+  .phase-body{font-size:12px;color:#666;line-height:1.6}
+  .phase-goal{margin-top:10px;padding:8px 10px;background:#f1efea;border-radius:8px;font-size:12px;color:#444;font-weight:500}
+
+  /* Channel cards */
+  .channels-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:1rem}
+  .channel-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem}
+  .channel-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+  .channel-name{font-size:14px;font-weight:500;color:#111}
+  .channel-pct{font-size:13px;font-weight:500;color:#185FA5;background:#E6F1FB;padding:2px 8px;border-radius:6px}
+  .channel-body{font-size:12px;color:#666;line-height:1.6;margin-bottom:8px}
+  .channel-kpi{font-size:11px;color:#999;border-top:1px solid #eee;padding-top:7px}
+  .channel-kpi span{color:#444;font-weight:500}
+
+  /* Funnel */
+  .funnel{margin-top:1rem;display:flex;flex-direction:column;gap:4px}
+  .funnel-row{display:flex;align-items:center;gap:12px}
+  .funnel-bar-wrap{flex:1;background:#f1efea;border-radius:8px;height:38px;overflow:hidden}
+  .funnel-bar{height:100%;border-radius:8px;display:flex;align-items:center;padding:0 14px;font-size:13px;font-weight:500;color:#fff;white-space:nowrap}
+  .funnel-label{font-size:12px;color:#666;min-width:90px;text-align:right}
+  .funnel-num{font-size:13px;font-weight:500;color:#111;min-width:70px}
+
+  /* Competitive */
+  .comp-table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:12px}
+  .comp-table th{text-align:left;padding:8px 12px;background:#f1efea;color:#555;font-weight:600;border-bottom:1px solid #e0ddd5}
+  .comp-table td{padding:8px 12px;border-bottom:1px solid #eee;color:#555;vertical-align:top}
+  .comp-table tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:500}
+  .tag-green{background:#EAF3DE;color:#3B6D11}
+  .tag-red{background:#FCEBEB;color:#A32D2D}
+  .tag-yellow{background:#FAEEDA;color:#854F0B}
+
+  /* Messaging */
+  .msg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1rem}
+  .msg-card{background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1rem}
+  .msg-segment{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#185FA5;margin-bottom:5px}
+  .msg-headline{font-size:14px;font-weight:500;color:#111;margin-bottom:5px;line-height:1.4}
+  .msg-hook{font-size:12px;color:#666;line-height:1.55;font-style:italic}
+
+  /* Milestones */
+  .milestone-list{margin-top:1rem;display:flex;flex-direction:column;gap:0}
+  .milestone-row{display:flex;gap:16px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #eee}
+  .milestone-row:last-child{border-bottom:none}
+  .milestone-q{min-width:50px;font-size:12px;font-weight:600;color:#185FA5}
+  .milestone-content{flex:1}
+  .milestone-title{font-size:13px;font-weight:500;color:#111;margin-bottom:3px}
+  .milestone-desc{font-size:12px;color:#666;line-height:1.55}
+  .milestone-kpi{margin-top:4px;font-size:11px;color:#888;font-style:italic}
+
+  /* Referral */
+  .referral-box{background:#EAF3DE;border:1px solid #C0DD97;border-radius:12px;padding:1.25rem;margin-top:1rem}
+  .referral-title{font-size:15px;font-weight:500;color:#27500A;margin-bottom:.5rem}
+  .referral-body{font-size:13px;color:#3B6D11;line-height:1.7}
+  .referral-steps{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+  .referral-step{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:#3B6D11}
+  .r-num{background:#27500A;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div style="margin-bottom:2.5rem">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:.4rem">CareGuard · Confidential</div>
+    <h1>Go-to-Market Strategy</h1>
+    <div class="subtitle">B2C · Under $50K budget · Digital + Referral · LATAM, US & Canada · 2026–2028</div>
+  </div>
+
+  <!-- STRATEGIC NORTH STAR -->
+  <div class="section">
+    <div class="badge">GTM Philosophy</div>
+    <div class="section-title">Start tight, go deep, then expand</div>
+    <div class="body-text">With a sub-$50K budget and a 1–3 person team, the worst mistake is trying to be everywhere at once. CareGuard's GTM is built on one principle: own a specific beachhead segment so completely that word-of-mouth does the heavy lifting by month 6. That segment is <strong>Latin American diaspora families in the US</strong> — adults aged 30–50, living in major US metros, with parents or grandparents in Colombia, Mexico, or Chile. They have the income, the urgency, and the emotional motivation. And they talk to each other.</div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="section">
+    <div class="badge">Launch phases</div>
+    <div class="section-title">Three phases over 24 months</div>
+    <div class="phases">
+      <div class="phase-card">
+        <div class="phase-num">Phase 1</div>
+        <div class="phase-name">Beachhead</div>
+        <div class="phase-period">Months 1–6</div>
+        <div class="phase-body">Laser-focus on Latino diaspora in 3 US cities (Miami, Houston, NYC). Manual onboarding of first 100 families. Learn what converts, what churns, what they tell their friends. Zero paid spend — organic only.</div>
+        <div class="phase-goal">Goal: 100 paying families, NPS &gt; 60</div>
+      </div>
+      <div class="phase-card" style="border-color:#378ADD">
+        <div class="phase-num">Phase 2</div>
+        <div class="phase-name">Accelerate</div>
+        <div class="phase-period">Months 7–18</div>
+        <div class="phase-body">Activate referral engine. Launch targeted Meta/Instagram ads to diaspora audiences. Begin Colombia + Mexico sales (LATAM pricing). Add Spanish-language content and community partnerships.</div>
+        <div class="phase-goal">Goal: 1,000 paying families, CAC &lt; $40</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Phase 3</div>
+        <div class="phase-name">Scale</div>
+        <div class="phase-period">Months 19–36</div>
+        <div class="phase-body">Expand to Canada, Chile. Explore B2B2C partnerships (pharmacies, home care agencies). Launch affiliate program for doctors and social workers. Raise seed round based on retention data.</div>
+        <div class="phase-goal">Goal: 5,000 paying families, MRR &gt; $90K</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BEACHHEAD SEGMENT -->
+  <div class="section">
+    <div class="badge">Beachhead segment</div>
+    <div class="section-title">Who we go after first — and why</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:1rem">
+      <div style="background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem">
+        <div style="font-size:13px;font-weight:500;color:#111;margin-bottom:6px">Primary: US-based Latino diaspora</div>
+        <div style="font-size:12px;color:#666;line-height:1.6">Age 32–52. Household income $60K+. Parent or grandparent in LATAM (Colombia, Mexico, Chile). Uses WhatsApp daily. Follows Latino health/family influencers. Strong community ties — refers to siblings and cousins. <strong>Pain: distance guilt + no reliable remote care option.</strong></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem">
+        <div style="font-size:13px;font-weight:500;color:#111;margin-bottom:6px">Secondary: Local LATAM families</div>
+        <div style="font-size:12px;color:#666;line-height:1.6">Middle-class families in Bogotá, Medellín, CDMX, Santiago. Adult children working long hours, parents living alone or with conditions. Price-sensitive — LATAM pricing required. Acquired primarily through referral from diaspora segment.</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e0ddd5;border-radius:12px;padding:1.1rem">
+        <div style="font-size:13px;font-weight:500;color:#111;margin-bottom:6px">Tertiary: Canadian diaspora (Phase 3)</div>
+        <div style="font-size:12px;color:#666;line-height:1.6">Similar profile to US segment. Toronto, Vancouver, Calgary. Latin American immigrant communities with family abroad. Add in Year 2 once playbook is proven in the US.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACQUISITION CHANNELS -->
+  <div class="section">
+    <div class="badge">Acquisition channels</div>
+    <div class="section-title">Budget allocation — Year 1 ($50K total)</div>
+    <div class="channels-grid">
+      <div class="channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Meta / Instagram Ads</div>
+          <div class="channel-pct">40% · $20K</div>
+        </div>
+        <div class="channel-body">Target Hispanic/Latino adults 30–55 in Miami, Houston, NYC, LA. Interest targeting: "family caregiver," "parents abroad," "home safety." Spanish-language creatives. Video ads showing the emotional moment — a child relieved after getting a safety update on their parent. Test 5+ creatives, kill fast.</div>
+        <div class="channel-kpi">Target CAC: <span>$35–45</span> · CTR target: <span>1.5%+</span></div>
+      </div>
+      <div class="channel-card" style="border:2px solid #378ADD">
+        <div class="channel-header">
+          <div class="channel-name">Referral Program</div>
+          <div class="channel-pct">20% · $10K</div>
+        </div>
+        <div class="channel-body">Give-$15/get-$15 credit for both referrer and new subscriber. Activated at day 14 (post-trial, high satisfaction window). WhatsApp-native sharing — pre-written message in Spanish. Family referral bonus: if a sibling signs up, both get 2 free months. Budget covers incentive credits and tooling.</div>
+        <div class="channel-kpi">Target CAC: <span>&lt;$15</span> · Viral coefficient target: <span>0.4+</span></div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Content &amp; SEO</div>
+          <div class="channel-pct">15% · $7.5K</div>
+        </div>
+        <div class="channel-body">Spanish + English blog targeting high-intent searches: "how to monitor elderly parent remotely," "cómo cuidar a mis padres desde lejos." YouTube shorts: real stories, product demos. Repurposed as ad creative. 3–6 month play — builds compounding organic traffic.</div>
+        <div class="channel-kpi">Target: <span>5K monthly organic visitors</span> by month 12</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Community &amp; WhatsApp</div>
+          <div class="channel-pct">15% · $7.5K</div>
+        </div>
+        <div class="channel-body">Partner with Latino family Facebook groups, WhatsApp community admins, and Latino parenting communities. Sponsored posts + moderator outreach. Attend 2–3 Latino community events in target cities (e.g., health fairs, senior fairs). Budget covers events + community sponsorships.</div>
+        <div class="channel-kpi">Target: <span>200 leads/month</span> by month 9</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-header">
+          <div class="channel-name">Micro-influencers</div>
+          <div class="channel-pct">10% · $5K</div>
+        </div>
+        <div class="channel-body">5–10 Latino family/health micro-influencers (10K–100K followers). Free product + $300–600 per post. Focus on authentic testimonial format — "I set this up for my mom in Bogotá." Instagram reels, TikTok. Measure by tracked referral links, not vanity metrics.</div>
+        <div class="channel-kpi">Target: <span>50+ conversions</span> per campaign</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- MESSAGING -->
+  <div class="section">
+    <div class="badge">Messaging framework</div>
+    <div class="section-title">Right message for each segment</div>
+    <div class="msg-grid">
+      <div class="msg-card">
+        <div class="msg-segment">US Diaspora (English)</div>
+        <div class="msg-headline">"Stop worrying. Start knowing."</div>
+        <div class="msg-hook">"Your mom is 3,000 miles away. You can't be there every day — but CareGuard can. Get a morning update on how she's doing, and an alert only when something needs your attention."</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-segment">US Diaspora (Spanish)</div>
+        <div class="msg-headline">"Cuídalos desde donde estés."</div>
+        <div class="msg-hook">"Tu papá vive solo en Medellín y tú estás en Miami. No necesitas cámaras ni cuidadores costosos — solo una señal cuando algo importa. Eso es CareGuard."</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-segment">LATAM Local Families</div>
+        <div class="msg-headline">"Trabaja tranquilo. Ellos están bien."</div>
+        <div class="msg-hook">"Tus hijos trabajan todo el día y tu mamá está sola en casa. CareGuard te avisa si algo pasa — sin cámaras, sin invadir su privacidad."</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-segment">Referral (WhatsApp)</div>
+        <div class="msg-headline">"This is how I take care of my dad from here"</div>
+        <div class="msg-hook">Pre-written shareable: "I've been using CareGuard to monitor my dad in [city]. It's not cameras — just smart sensors that tell me if anything's off. Try it free: [link]"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONVERSION FUNNEL -->
+  <div class="section">
+    <div class="badge">Conversion funnel</div>
+    <div class="section-title">Month 12 target — 1,000 active subscribers</div>
+    <div class="funnel">
+      <div class="funnel-row">
+        <div class="funnel-label">Impressions</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:#B5D4F4;color:#042C53">500,000 monthly</div></div>
+        <div class="funnel-num" style="color:#185FA5">500K</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Site visits</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:70%;background:#85B7EB;color:#042C53">2.0% CTR → 10,000</div></div>
+        <div class="funnel-num" style="color:#185FA5">10K</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Trial starts</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:45%;background:#378ADD;color:#fff">25% → 2,500</div></div>
+        <div class="funnel-num" style="color:#185FA5">2,500</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Kit shipped</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:28%;background:#185FA5;color:#fff">60% → 1,500</div></div>
+        <div class="funnel-num" style="color:#185FA5">1,500</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Subscribers</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:16%;background:#0C447C;color:#fff">67% → 1,000 paying</div></div>
+        <div class="funnel-num" style="color:#111;font-weight:600">1,000</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- REFERRAL ENGINE -->
+  <div class="section">
+    <div class="badge">Referral engine</div>
+    <div class="section-title">The growth flywheel — designed for WhatsApp culture</div>
+    <div class="referral-box">
+      <div class="referral-title">Give $15 · Get $15 · Family bonus: 2 free months</div>
+      <div class="referral-body">The referral program is CareGuard's most important long-term acquisition channel. Latino families communicate via WhatsApp — and when something genuinely helps a parent stay safe, they <em>share it</em>. The program is engineered for that behavior.</div>
+      <div class="referral-steps">
+        <div class="referral-step"><div class="r-num">1</div><div>Subscriber completes 14-day trial → receives referral link + pre-written WhatsApp message in Spanish</div></div>
+        <div class="referral-step"><div class="r-num">2</div><div>Friend clicks link → sees landing page with referrer's first name ("Maria thinks you need this") → starts free trial</div></div>
+        <div class="referral-step"><div class="r-num">3</div><div>Friend converts to paid → both receive $15 credit. If friend is a sibling → family bonus triggers (2 free months for both)</div></div>
+        <div class="referral-step"><div class="r-num">4</div><div>New subscriber enters the same referral loop at day 14 → flywheel compounds</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPETITIVE POSITIONING -->
+  <div class="section">
+    <div class="badge">Competitive positioning</div>
+    <div class="section-title">Where CareGuard wins</div>
+    <table class="comp-table">
+      <tr>
+        <th>Competitor</th>
+        <th>What they do</th>
+        <th>Their gap</th>
+        <th>CareGuard edge</th>
+      </tr>
+      <tr>
+        <td><strong>Life Alert / Medical Guardian</strong></td>
+        <td>Wearable panic button, US-only</td>
+        <td>Requires elder to press button. No passive monitoring. No LATAM.</td>
+        <td><span class="tag tag-green">Passive AI monitoring</span></td>
+      </tr>
+      <tr>
+        <td><strong>Ring / Nest cameras</strong></td>
+        <td>Home cameras + basic alerts</td>
+        <td>Privacy invasion. Elder rejection. No behavioral AI.</td>
+        <td><span class="tag tag-green">No cameras, elder consent</span></td>
+      </tr>
+      <tr>
+        <td><strong>Honor / Care.com</strong></td>
+        <td>Human caregiver marketplace</td>
+        <td>Expensive ($20–35/hr). Requires in-home stranger.</td>
+        <td><span class="tag tag-green">10x cheaper, less intrusive</span></td>
+      </tr>
+      <tr>
+        <td><strong>Moves app / Wellzesta</strong></td>
+        <td>Senior activity tracking apps</td>
+        <td>Elder must actively use the app. Low compliance rate.</td>
+        <td><span class="tag tag-green">Zero elder action required</span></td>
+      </tr>
+      <tr>
+        <td><strong>Local LATAM solutions</strong></td>
+        <td>Few exist, mostly security-focused</td>
+        <td>Not designed for family care. No AI. No family dashboard.</td>
+        <td><span class="tag tag-green">First mover advantage</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- MILESTONES -->
+  <div class="section">
+    <div class="badge">12-month milestones</div>
+    <div class="section-title">Quarterly targets and key activities</div>
+    <div class="milestone-list">
+      <div class="milestone-row">
+        <div class="milestone-q">Q1</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Foundation — build the machine</div>
+          <div class="milestone-desc">Launch landing page (EN + ES). Set up Meta Ads account and first 3 creatives. Manually onboard first 30 families in Miami. Build referral tooling. Set up analytics (Mixpanel or Amplitude). Begin WhatsApp community outreach.</div>
+          <div class="milestone-kpi">Target: 50 active subscribers · CAC &lt; $60 (learning phase)</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-q">Q2</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Prove — validate the flywheel</div>
+          <div class="milestone-desc">Activate referral program. Expand Meta Ads to Houston + NYC. Launch first micro-influencer campaign (3 creators). Publish 10 SEO blog posts. First LATAM soft launch (Colombia — friends and family).</div>
+          <div class="milestone-kpi">Target: 200 active subscribers · NPS &gt; 55 · first referral conversions</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-q">Q3</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Scale — pour fuel on what works</div>
+          <div class="milestone-desc">Double budget on best-performing Meta creative. Expand to LA + Chicago. Launch Colombia and Mexico officially. WhatsApp group partnerships. Begin building caregiver/pharmacy partnership pipeline.</div>
+          <div class="milestone-kpi">Target: 600 active subscribers · CAC &lt; $40 · MRR &gt; $11K</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-q">Q4</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Momentum — data-driven retention focus</div>
+          <div class="milestone-desc">Launch annual plan discount (2 months free). First retention campaign targeting month-3 risk cohort. Publish case studies. Begin Canadian market research. Prepare seed deck with unit economics proof.</div>
+          <div class="milestone-kpi">Target: 1,000 active subscribers · MRR &gt; $19K · churn &lt; 3%/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#E6F1FB;border:1px solid #B5D4F4;border-radius:14px;padding:1.5rem;text-align:center;margin-top:1rem">
+    <div style="font-size:16px;font-weight:500;color:#185FA5;margin-bottom:.4rem">One sentence to guide every GTM decision</div>
+    <div style="font-size:14px;color:#185FA5;line-height:1.7;max-width:600px;margin:0 auto">"Find one family in Miami whose parent is in Bogotá, make them so happy they tell their three siblings — then build the machine that does that at scale."</div>
+  </div>
+
+</div>
+</body>
+</html>
