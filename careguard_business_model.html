@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Business Model & Pricing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f8f6; color: #1a1a1a; padding: 2rem 1.5rem; }
+  .doc { max-width: 820px; margin: 0 auto; }
+  .page-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 0.5rem; }
+  .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 2rem; }
+  .section { margin-bottom: 2.5rem; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #185FA5; background: #E6F1FB; padding: 4px 10px; border-radius: 8px; margin-bottom: 0.75rem; }
+  .section-title { font-size: 17px; font-weight: 500; color: #111; margin-bottom: 0.6rem; line-height: 1.35; }
+  .section-body { font-size: 14px; color: #555; line-height: 1.75; }
+  .divider { border: none; border-top: 1px solid #e8e8e4; margin: 2rem 0; }
+
+  .stream-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 1rem; }
+  .stream-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.1rem; }
+  .stream-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #999; margin-bottom: 5px; }
+  .stream-name { font-size: 14px; font-weight: 500; color: #111; margin-bottom: 4px; }
+  .stream-desc { font-size: 12px; color: #666; line-height: 1.55; }
+  .stream-pct { font-size: 22px; font-weight: 500; color: #111; margin-top: 10px; }
+  .stream-sub { font-size: 11px; color: #999; }
+
+  .hw-table { background: #f1efea; border-radius: 12px; padding: 0.25rem 1.25rem; margin-top: 1rem; }
+  .hw-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e0ddd5; }
+  .hw-row:last-child { border-bottom: none; }
+  .hw-name { font-size: 14px; font-weight: 500; color: #111; }
+  .hw-detail { font-size: 12px; color: #777; margin-top: 2px; }
+  .hw-price { text-align: right; font-size: 14px; font-weight: 500; color: #111; }
+  .hw-latam { font-size: 11px; color: #999; }
+
+  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 1rem; }
+  .plan-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 14px; padding: 1.25rem; }
+  .plan-card.featured { border: 2px solid #378ADD; }
+  .plan-tier { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 8px; margin-bottom: 6px; }
+  .tier-essential { background: #f1efea; color: #666; }
+  .tier-family { background: #E6F1FB; color: #185FA5; }
+  .tier-complete { background: #FAEEDA; color: #854F0B; }
+  .plan-name { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 8px; }
+  .plan-price-main { font-size: 28px; font-weight: 500; color: #111; }
+  .plan-price-period { font-size: 13px; color: #888; }
+  .plan-price-latam { font-size: 12px; color: #999; margin-top: 2px; margin-bottom: 8px; }
+  .plan-desc { font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 12px; }
+  .plan-hr { border: none; border-top: 1px solid #eee; margin-bottom: 10px; }
+  .feature { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 6px; }
+  .check { color: #1D9E75; font-weight: 600; flex-shrink: 0; }
+  .dash-icon { color: #ccc; flex-shrink: 0; }
+
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 1rem; }
+  .metric-card { background: #f1efea; border-radius: 10px; padding: 0.9rem 1rem; text-align: center; }
+  .metric-value { font-size: 22px; font-weight: 500; color: #111; }
+  .metric-label { font-size: 11px; color: #777; margin-top: 3px; line-height: 1.4; }
+
+  .geo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 1rem; }
+  .geo-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 10px; padding: 1rem 1.1rem; }
+  .geo-flag { font-size: 20px; margin-bottom: 5px; }
+  .geo-name { font-size: 14px; font-weight: 500; color: #111; margin-bottom: 4px; }
+  .geo-detail { font-size: 12px; color: #666; line-height: 1.55; }
+
+  .moat-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.75rem; }
+  .moat-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; background: #f1efea; border-radius: 10px; }
+  .moat-icon { font-size: 18px; flex-shrink: 0; }
+  .moat-name { font-size: 14px; font-weight: 500; color: #111; margin-bottom: 3px; }
+  .moat-desc { font-size: 13px; color: #666; line-height: 1.5; }
+
+  .cta-box { background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 14px; padding: 1.5rem; text-align: center; }
+  .cta-title { font-size: 17px; font-weight: 500; color: #185FA5; margin-bottom: 0.5rem; }
+  .cta-body { font-size: 14px; color: #185FA5; line-height: 1.6; margin-bottom: 1rem; }
+  .cta-btn { background: #185FA5; color: #fff; font-size: 14px; font-weight: 500; padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="page-label">CareGuard · Business model & pricing</div>
+  <div class="page-title">B2C · Mid-range · Latin America, US & Canada</div>
+
+  <div class="section">
+    <div class="badge">Business model</div>
+    <div class="section-title">Hardware + recurring subscription — the "razor and blade" model</div>
+    <div class="section-body">CareGuard earns revenue on two layers: a one-time hardware sale (the sensor kit) that gets the family committed, and a monthly or annual subscription that generates predictable recurring revenue. The hardware is priced at or near cost to lower the adoption barrier. The subscription is where the business lives. This mirrors what ADT, Ring, and Apple One do — the device is the hook, the service is the engine.</div>
+  </div>
+
+  <div class="section">
+    <div class="badge">Revenue streams</div>
+    <div class="stream-grid">
+      <div class="stream-card">
+        <div class="stream-label">Stream 1</div>
+        <div class="stream-name">Hardware kit sale</div>
+        <div class="stream-desc">One-time purchase of sensor kit. Priced to cover cost + small margin. Creates switching cost through installation.</div>
+        <div class="stream-pct">~20%</div>
+        <div class="stream-sub">of total revenue at scale</div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-label">Stream 2 · Core</div>
+        <div class="stream-name">Monthly subscription</div>
+        <div class="stream-desc">Recurring fee for AI monitoring, alerts, dashboard, and support. The primary revenue engine with high retention potential.</div>
+        <div class="stream-pct">~70%</div>
+        <div class="stream-sub">of total revenue at scale</div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-label">Stream 3</div>
+        <div class="stream-name">Add-ons & upgrades</div>
+        <div class="stream-desc">Extra sensors, professional caregiver access, emergency response integration, medical history sharing.</div>
+        <div class="stream-pct">~10%</div>
+        <div class="stream-sub">of total revenue at scale</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="badge">Hardware pricing</div>
+    <div class="section-title">One-time kit — sold at low margin to drive adoption</div>
+    <div class="hw-table">
+      <div class="hw-row">
+        <div><div class="hw-name">Starter Kit</div><div class="hw-detail">4 motion sensors + 1 door sensor + hub — covers a 1–2 bedroom home</div></div>
+        <div class="hw-price"><div>$79 USD</div><div class="hw-latam">~$65 USD in LATAM</div></div>
+      </div>
+      <div class="hw-row">
+        <div><div class="hw-name">Complete Kit</div><div class="hw-detail">8 sensors + 2 door sensors + hub + panic button — full home coverage</div></div>
+        <div class="hw-price"><div>$129 USD</div><div class="hw-latam">~$99 USD in LATAM</div></div>
+      </div>
+      <div class="hw-row">
+        <div><div class="hw-name">Extra sensor (add-on)</div><div class="hw-detail">Individual sensor — motion, door, or panic button</div></div>
+        <div class="hw-price"><div>$19 USD each</div><div class="hw-latam">~$14 USD in LATAM</div></div>
+      </div>
+    </div>
+    <div class="section-body" style="margin-top:0.75rem; font-size:13px;">LATAM pricing is localized to reflect purchasing power parity. Kits are also available on a lease model bundled into the subscription (+$5–8/mo) to eliminate the upfront barrier entirely.</div>
+  </div>
+
+  <div class="section">
+    <div class="badge">Subscription plans</div>
+    <div class="section-title">Three tiers — designed for different family situations</div>
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-tier tier-essential">Essential</div>
+        <div class="plan-name">Essential</div>
+        <div><span class="plan-price-main">$9</span> <span class="plan-price-period">/ mo USD</span></div>
+        <div class="plan-price-latam">~$5–6 USD / mo in LATAM</div>
+        <div class="plan-desc">For families just getting started — one loved one, one caregiver account.</div>
+        <div class="plan-hr"></div>
+        <div class="feature"><span class="check">✓</span><span>1 monitored person</span></div>
+        <div class="feature"><span class="check">✓</span><span>Daily activity summary</span></div>
+        <div class="feature"><span class="check">✓</span><span>Anomaly alerts (standard)</span></div>
+        <div class="feature"><span class="check">✓</span><span>2 family app accounts</span></div>
+        <div class="feature"><span class="check">✓</span><span>7-day data history</span></div>
+        <div class="feature"><span class="dash-icon">—</span><span style="color:#bbb">No professional access</span></div>
+        <div class="feature"><span class="dash-icon">—</span><span style="color:#bbb">No emergency dispatch</span></div>
+      </div>
+
+      <div class="plan-card featured">
+        <div class="plan-tier tier-family">Most popular</div>
+        <div class="plan-name">Family</div>
+        <div><span class="plan-price-main">$19</span> <span class="plan-price-period">/ mo USD</span></div>
+        <div class="plan-price-latam">~$10–12 USD / mo in LATAM</div>
+        <div class="plan-desc">For distributed families — multiple members across cities sharing one dashboard.</div>
+        <div class="plan-hr"></div>
+        <div class="feature"><span class="check">✓</span><span>1 monitored person</span></div>
+        <div class="feature"><span class="check">✓</span><span>Real-time alerts with priority levels</span></div>
+        <div class="feature"><span class="check">✓</span><span>Unlimited family accounts</span></div>
+        <div class="feature"><span class="check">✓</span><span>1 professional access (doctor/caregiver)</span></div>
+        <div class="feature"><span class="check">✓</span><span>30-day data history</span></div>
+        <div class="feature"><span class="check">✓</span><span>Weekly health trend report</span></div>
+        <div class="feature"><span class="dash-icon">—</span><span style="color:#bbb">No emergency dispatch</span></div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-tier tier-complete">Complete</div>
+        <div class="plan-name">Complete</div>
+        <div><span class="plan-price-main">$34</span> <span class="plan-price-period">/ mo USD</span></div>
+        <div class="plan-price-latam">~$18–22 USD / mo in LATAM</div>
+        <div class="plan-desc">For families managing complex health conditions who want full professional coordination.</div>
+        <div class="plan-hr"></div>
+        <div class="feature"><span class="check">✓</span><span>Up to 2 monitored people</span></div>
+        <div class="feature"><span class="check">✓</span><span>Everything in Family</span></div>
+        <div class="feature"><span class="check">✓</span><span>Emergency dispatch integration</span></div>
+        <div class="feature"><span class="check">✓</span><span>3 professional access accounts</span></div>
+        <div class="feature"><span class="check">✓</span><span>90-day full data history</span></div>
+        <div class="feature"><span class="check">✓</span><span>Monthly caregiver coordination report</span></div>
+        <div class="feature"><span class="check">✓</span><span>Priority customer support</span></div>
+      </div>
+
+    </div>
+    <div class="section-body" style="margin-top:0.75rem; font-size:13px;">Annual plans offered at 2 months free (~17% discount). First 30 days free on any plan — no credit card required to start.</div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="badge">Unit economics · Family plan (target)</div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-value">$19</div><div class="metric-label">ARPU — avg. monthly revenue per user</div></div>
+      <div class="metric-card"><div class="metric-value">~$35</div><div class="metric-label">Estimated CAC via digital channels</div></div>
+      <div class="metric-card"><div class="metric-value">&lt; 2 mo</div><div class="metric-label">CAC payback period</div></div>
+      <div class="metric-card"><div class="metric-value">85%+</div><div class="metric-label">Target annual retention rate</div></div>
+      <div class="metric-card"><div class="metric-value">$400+</div><div class="metric-label">LTV at 24-month avg. retention</div></div>
+      <div class="metric-card"><div class="metric-value">11x</div><div class="metric-label">Target LTV : CAC ratio</div></div>
+    </div>
+    <div class="section-body" style="margin-top:0.75rem; font-size:13px;">Retention is the superpower of this model. A family that installs CareGuard and experiences one real incident will almost never churn. The emotional switching cost is enormous — and compounds as the AI learns more about their loved one over time.</div>
+  </div>
+
+  <div class="section">
+    <div class="badge">Geographic pricing strategy</div>
+    <div class="geo-grid">
+      <div class="geo-card">
+        <div class="geo-flag">🇺🇸</div>
+        <div class="geo-name">United States</div>
+        <div class="geo-detail">Full USD pricing. Primary growth market. Latino diaspora families caring for parents abroad are a high-fit, high-willingness-to-pay segment.</div>
+      </div>
+      <div class="geo-card">
+        <div class="geo-flag">🇨🇦</div>
+        <div class="geo-name">Canada</div>
+        <div class="geo-detail">CAD pricing at parity with USD tiers. Strong immigrant population with family in LATAM. Similar purchasing power — full pricing applies.</div>
+      </div>
+      <div class="geo-card">
+        <div class="geo-flag">🌎</div>
+        <div class="geo-name">Latin America</div>
+        <div class="geo-detail">Localized pricing at 50–60% of USD rates. Colombia, Mexico, Chile as launch countries. Local payment methods: PSE, OXXO, Mercado Pago.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="badge">Competitive moat</div>
+    <div class="moat-list">
+      <div class="moat-item">
+        <div class="moat-icon">🧠</div>
+        <div><div class="moat-name">Personalized AI that gets smarter over time</div><div class="moat-desc">The longer a family uses CareGuard, the more accurate the AI becomes. A competitor can copy the hardware — they can't copy 18 months of behavioral data on your grandfather.</div></div>
+      </div>
+      <div class="moat-item">
+        <div class="moat-icon">👨‍👩‍👧</div>
+        <div><div class="moat-name">Multi-member family network effect</div><div class="moat-desc">Every family member added is a new distribution node. Families refer CareGuard to siblings and friends in the same situation — CAC drops as the network grows.</div></div>
+      </div>
+      <div class="moat-item">
+        <div class="moat-icon">🌎</div>
+        <div><div class="moat-name">Cross-border family positioning</div><div class="moat-desc">No competitor is built for the Latino diaspora dynamic — a child in the US caring for a parent in Colombia. This binational emotional context is a defensible niche that global players won't prioritize.</div></div>
+      </div>
+      <div class="moat-item">
+        <div class="moat-icon">🔒</div>
+        <div><div class="moat-name">Privacy-first as a trust asset</div><div class="moat-desc">No cameras, no voice recording. In a market where surveillance anxiety is real, CareGuard's architecture is a marketing differentiator — not just an ethical choice.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-title">Ready to go deeper?</div>
+    <div class="cta-body">Next step: define the go-to-market strategy and acquisition channels for CareGuard's launch.</div>
+    <button class="cta-btn">Build the go-to-market strategy</button>
+  </div>
+
+</div>
+</body>
+</html>
