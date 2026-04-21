@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Arquitectura de IA</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f3ee;
+    --cream: #ece9e1;
+    --blue: #1a4fd6;
+    --blue-lt: #e8eefb;
+    --green: #1a7a4a;
+    --green-lt: #e4f5ec;
+    --amber: #b85c00;
+    --amber-lt: #fdf0e2;
+    --red: #c0292a;
+    --red-lt: #fbeaea;
+    --muted: #7a7469;
+    --border: #d8d4cc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.6; }
+
+  .page { max-width: 940px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* Header */
+  .hero { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  .hero-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .75rem; }
+  .hero-title { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--ink); line-height: 1.1; margin-bottom: .75rem; }
+  .hero-title em { font-style: italic; color: var(--blue); }
+  .hero-sub { font-size: 16px; color: var(--muted); max-width: 580px; line-height: 1.7; }
+
+  /* Answer banner */
+  .answer-banner { background: var(--blue); color: #fff; border-radius: 14px; padding: 1.5rem 2rem; margin-bottom: 2.5rem; display: flex; align-items: flex-start; gap: 1.25rem; }
+  .ab-icon { font-size: 28px; flex-shrink: 0; }
+  .ab-title { font-size: 17px; font-weight: 600; margin-bottom: .35rem; }
+  .ab-body { font-size: 14px; line-height: 1.7; opacity: .92; }
+
+  /* Section labels */
+  .sec-label { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+  .sec-title { font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: .75rem; }
+  .sec-body { font-size: 14px; color: #555; line-height: 1.75; margin-bottom: 1.5rem; }
+  .section { margin-bottom: 3rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* Flow diagram */
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 1.25rem 0; }
+  .flow-row { display: flex; align-items: stretch; gap: 0; }
+  .flow-node { flex: 1; background: #fff; border: 1px solid var(--border); padding: 1rem 1.1rem; position: relative; }
+  .flow-node:not(:last-child) { border-right: none; }
+  .flow-node:first-child { border-radius: 10px 0 0 10px; }
+  .flow-node:last-child { border-radius: 0 10px 10px 0; border-right: 1px solid var(--border); }
+  .fn-step { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .fn-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .fn-detail { font-size: 12px; color: #666; line-height: 1.5; }
+  .fn-tech { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); margin-top: 6px; font-weight: 500; }
+  .flow-arrow { display: flex; align-items: center; justify-content: center; padding: 0 8px; color: var(--blue); font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+  /* Phases (learning model) */
+  .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 1.25rem 0; }
+  .phase-card { border-radius: 12px; padding: 1.1rem; border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .phase-card::before { content: attr(data-num); position: absolute; right: 12px; top: 8px; font-family: 'DM Serif Display', serif; font-size: 52px; color: rgba(0,0,0,.04); line-height: 1; }
+  .ph-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; font-weight: 500; }
+  .ph-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+  .ph-body { font-size: 12px; color: #555; line-height: 1.6; }
+  .ph-days { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600; margin-top: 8px; }
+
+  /* Stack table */
+  .stack { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 13px; }
+  .stack th { text-align: left; padding: 9px 14px; background: var(--ink); color: #fff; font-weight: 500; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+  .stack th:first-child { border-radius: 8px 0 0 0; }
+  .stack th:last-child { border-radius: 0 8px 0 0; }
+  .stack td { padding: 9px 14px; border-bottom: 1px solid var(--cream); vertical-align: top; color: #444; }
+  .stack tr:last-child td { border-bottom: none; }
+  .stack tr:nth-child(even) td { background: #faf9f7; }
+  .stack tr:hover td { background: var(--blue-lt); }
+  .tag-diy { background: var(--green-lt); color: var(--green); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .tag-buy { background: var(--blue-lt); color: var(--blue); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .tag-hard { background: var(--red-lt); color: var(--red); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); background: var(--blue-lt); padding: 1px 5px; border-radius: 3px; }
+
+  /* Cost cards */
+  .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 1.25rem 0; }
+  .cost-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .cc-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .06em; font-family: 'DM Mono', monospace; }
+  .cc-value { font-size: 22px; font-weight: 600; color: var(--ink); }
+  .cc-unit { font-size: 12px; color: var(--muted); }
+  .cc-detail { font-size: 12px; color: #666; margin-top: 5px; line-height: 1.5; }
+
+  /* Talent cards */
+  .talent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 1.25rem 0; }
+  .talent-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; }
+  .tc-role { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .tc-when { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--blue); margin-bottom: 8px; }
+  .tc-resp { font-size: 12px; color: #555; line-height: 1.6; }
+  .tc-cost { font-size: 12px; font-weight: 600; color: var(--green); margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--cream); }
+
+  /* Risk / decision boxes */
+  .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 1.25rem 0; }
+  @media (max-width: 600px) { .decision-grid { grid-template-columns: 1fr; } }
+  .decision-card { border-radius: 12px; padding: 1.25rem; }
+  .decision-card.build { background: var(--green-lt); border: 1px solid #a8dfc0; }
+  .decision-card.buy { background: var(--blue-lt); border: 1px solid #b5cef5; }
+  .dc-header { font-size: 16px; font-weight: 700; margin-bottom: .5rem; }
+  .decision-card.build .dc-header { color: var(--green); }
+  .decision-card.buy .dc-header { color: var(--blue); }
+  .dc-body { font-size: 13px; line-height: 1.65; }
+  .decision-card.build .dc-body { color: #1f5e38; }
+  .decision-card.buy .dc-body { color: #1a3d8a; }
+  .dc-list { margin-top: 8px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .dc-list li { font-size: 12px; padding-left: 14px; position: relative; }
+  .dc-list li::before { content: "→"; position: absolute; left: 0; font-weight: 700; }
+  .decision-card.build .dc-list li { color: #1f5e38; }
+  .decision-card.buy .dc-list li { color: #1a3d8a; }
+
+  /* Roadmap */
+  .roadmap { display: flex; flex-direction: column; gap: 0; margin: 1.25rem 0; }
+  .rm-row { display: flex; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--cream); align-items: flex-start; }
+  .rm-row:last-child { border-bottom: none; }
+  .rm-period { min-width: 110px; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--blue); padding-top: 2px; }
+  .rm-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 5px; }
+  .rm-content { flex: 1; }
+  .rm-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .rm-detail { font-size: 13px; color: #555; line-height: 1.55; }
+  .rm-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .rm-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--cream); color: var(--muted); }
+
+  /* Bottom answer */
+  .verdict { background: var(--ink); color: #fff; border-radius: 14px; padding: 2rem; margin-top: 1rem; }
+  .vd-title { font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: .75rem; }
+  .vd-body { font-size: 14px; line-height: 1.8; color: #ccc; }
+  .vd-highlight { color: #fff; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hero">
+    <div class="hero-label">CareGuard · Arquitectura técnica de IA</div>
+    <h1 class="hero-title">¿Puede la IA aprender a<br><em>cada persona por separado</em>?</h1>
+    <p class="hero-sub">Cómo funciona el sistema de aprendizaje por usuario, qué tecnología se necesita, qué construir vs. comprar, y cuánto cuesta realmente.</p>
+  </div>
+
+  <!-- ANSWER -->
+  <div class="answer-banner">
+    <div class="ab-icon">✓</div>
+    <div>
+      <div class="ab-title">Sí — y es uno de los problemas de ML mejor resueltos en la industria</div>
+      <div class="ab-body">Lo que CareGuard necesita se llama <strong>anomaly detection per-user</strong> con un modelo de baseline personalizado. No requiere un equipo de investigación en IA. Con las herramientas correctas, un solo ingeniero de ML puede construir la v1 en 6–10 semanas. El patrón es idéntico al que usan Netflix (detección de fraude por usuario), Apple Watch (alertas cardíacas personalizadas) y sistemas de seguridad industrial.</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="sec-label">Cómo funciona</div>
+    <div class="sec-title">El pipeline completo: del sensor a la alerta en la app</div>
+    <div class="sec-body">El sistema no aprende "movimiento en general" — aprende el movimiento <em>de tu abuela específica</em>. Cada usuario tiene su propio modelo. Así funciona el flujo de punta a punta:</div>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-node">
+          <div class="fn-step">01 · Captura</div>
+          <div class="fn-title">Sensores emiten eventos</div>
+          <div class="fn-detail">Sensor de movimiento dispara cada vez que detecta presencia. Sensor de puerta registra apertura/cierre. Hub local agrupa los eventos y los envía al cloud cada 60 seg.</div>
+          <div class="fn-tech">MQTT · Zigbee/Z-Wave</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-node">
+          <div class="fn-step">02 · Ingesta</div>
+          <div class="fn-title">Stream de eventos en tiempo real</div>
+          <div class="fn-detail">AWS IoT Core recibe los eventos. Cada evento tiene: user_id, sensor_id, tipo, timestamp. Se almacenan en DynamoDB (tiempo real) y S3 (histórico).</div>
+          <div class="fn-tech">AWS IoT Core · DynamoDB · S3</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-node">
+          <div class="fn-step">03 · Feature engineering</div>
+          <div class="fn-title">Eventos → características temporales</div>
+          <div class="fn-detail">Lambda convierte eventos crudos en features: hora_primera_actividad, duración_en_baño, ventanas_de_inactividad, frecuencia_cocina_mañana. Estas son las señales que el modelo aprende.</div>
+          <div class="fn-tech">AWS Lambda · Python · pandas</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-node">
+          <div class="fn-step">04 · Modelo personal</div>
+          <div class="fn-title">Baseline por usuario</div>
+          <div class="fn-detail">Modelo estadístico aprende el rango "normal" de cada feature para ese usuario específico. Se re-entrena semanalmente con los últimos 30 días de datos.</div>
+          <div class="fn-tech">Isolation Forest · LSTM · SageMaker</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-node">
+          <div class="fn-step">05 · Scoring</div>
+          <div class="fn-title">Anomaly score en tiempo real</div>
+          <div class="fn-detail">Cada nuevo evento se compara contra el baseline del usuario. Si la desviación supera el umbral configurado → se genera una alerta con nivel de prioridad.</div>
+          <div class="fn-tech">SageMaker Endpoint · Lambda</div>
+        </div>
+        <div class="flow-arrow">›</div>
+        <div class="flow-node" style="border-radius:0 10px 10px 0">
+          <div class="fn-step">06 · Entrega</div>
+          <div class="fn-title">Alerta a la app familiar</div>
+          <div class="fn-detail">API REST envía la alerta a la app móvil. Push notification vía Firebase. Payload incluye: tipo_anomalía, nivel, descripción en lenguaje natural, historial del día.</div>
+          <div class="fn-tech">API REST · Firebase · Twilio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- LEARNING PHASES -->
+  <div class="section">
+    <div class="sec-label">Modelo de aprendizaje</div>
+    <div class="sec-title">Cómo el sistema aprende a cada persona — 3 fases</div>
+
+    <div class="phases">
+      <div class="phase-card" data-num="1" style="background:#f0f7ff;border-color:#b5cef5">
+        <div class="ph-tag" style="background:var(--blue-lt);color:var(--blue)">Días 1–7</div>
+        <div class="ph-title">Modo observación pura</div>
+        <div class="ph-body">Los sensores recopilan datos sin generar alertas. El sistema registra todos los eventos: a qué hora se levanta, cuándo va al baño, qué tan seguido abre el refrigerador, cuándo se acuesta. Sin juicio todavía.</div>
+        <div class="ph-days" style="color:var(--blue)">Sin alertas · solo datos</div>
+      </div>
+      <div class="phase-card" data-num="2" style="background:#f0faf5;border-color:#a8dfc0">
+        <div class="ph-tag" style="background:var(--green-lt);color:var(--green)">Días 8–21</div>
+        <div class="ph-title">Construcción del baseline</div>
+        <div class="ph-body">El modelo calcula los rangos normales por hora del día y día de la semana. Aprende que los lunes el abuelo duerme más, que el baño siempre es entre 7–8am, que la cocina tiene actividad entre 12–1pm.</div>
+        <div class="ph-days" style="color:var(--green)">Alertas conservadoras · umbral alto</div>
+      </div>
+      <div class="phase-card" data-num="3" style="background:#fffbf0;border-color:#f5d98a">
+        <div class="ph-tag" style="background:var(--amber-lt);color:var(--amber)">Día 22+</div>
+        <div class="ph-title">Modo activo + refinamiento</div>
+        <div class="ph-body">El modelo entra en producción con umbrales calibrados. Cada vez que la familia confirma o descarta una alerta, ese feedback ajusta los umbrales. El modelo mejora continuamente con el uso real.</div>
+        <div class="ph-days" style="color:var(--amber)">Alertas calibradas · aprendizaje continuo</div>
+      </div>
+      <div class="phase-card" data-num="4" style="background:#fdf0f0;border-color:#f0b0b0">
+        <div class="ph-tag" style="background:var(--red-lt);color:var(--red)">Mes 3+</div>
+        <div class="ph-title">Detección de cambios graduales</div>
+        <div class="ph-body">El sistema detecta cuando el baseline <em>en sí mismo</em> cambia con el tiempo — por ejemplo, que el abuelo cada vez se levanta más tarde o va menos seguido a la cocina. Esto puede indicar deterioro gradual de salud.</div>
+        <div class="ph-days" style="color:var(--red)">Alertas de tendencia · valor clínico real</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="sec-label">Stack tecnológico</div>
+    <div class="sec-title">Qué comprar vs. qué construir — por capa</div>
+    <div class="sec-body">La regla es simple: compra la infraestructura genérica (AWS, Firebase), construye lo que es específico de CareGuard (el modelo de anomalías per-user, las features de comportamiento, la lógica de alertas).</div>
+
+    <table class="stack">
+      <thead>
+        <tr>
+          <th style="width:18%">Capa</th>
+          <th style="width:22%">Tecnología recomendada</th>
+          <th style="width:12%;text-align:center">Decisión</th>
+          <th style="width:24%">Por qué</th>
+          <th style="width:14%;text-align:right">Costo/mes (1K users)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sensores / Hub</strong></td>
+          <td><span class="code">Zigbee + Raspberry Pi</span> o módulo ESP32</td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Hardware off-the-shelf, firmware custom. BOM ~$18/sensor a escala.</td>
+          <td style="text-align:right">$0 (COGS)</td>
+        </tr>
+        <tr>
+          <td><strong>IoT Gateway</strong></td>
+          <td><span class="code">AWS IoT Core</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Maneja millones de conexiones MQTT. Seguro, escalable, sin operación manual.</td>
+          <td style="text-align:right">~$50–120</td>
+        </tr>
+        <tr>
+          <td><strong>Almacenamiento</strong></td>
+          <td><span class="code">DynamoDB + S3</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>DynamoDB para datos recientes (queries rápidos). S3 para histórico de entrenamiento.</td>
+          <td style="text-align:right">~$80–150</td>
+        </tr>
+        <tr>
+          <td><strong>Feature engineering</strong></td>
+          <td><span class="code">AWS Lambda + Python</span></td>
+          <td style="text-align:center"><span class="tag-diy">Construir</span></td>
+          <td>La lógica de qué features extraer es el corazón del producto. Nadie más sabe qué medir en este contexto.</td>
+          <td style="text-align:right">~$30–60</td>
+        </tr>
+        <tr>
+          <td><strong>Modelo ML v1</strong></td>
+          <td><span class="code">Isolation Forest</span> (scikit-learn)</td>
+          <td style="text-align:center"><span class="tag-diy">Construir</span></td>
+          <td>Algoritmo probado para anomaly detection con series temporales. Sin deep learning en v1 — más interpretable y rápido de depurar.</td>
+          <td style="text-align:right">~$0 (OSS)</td>
+        </tr>
+        <tr>
+          <td><strong>Modelo ML v2</strong></td>
+          <td><span class="code">LSTM / Autoencoder</span> (PyTorch)</td>
+          <td style="text-align:center"><span class="tag-diy">Construir</span></td>
+          <td>Para Año 2: redes neuronales que capturan dependencias temporales complejas. Mejor para detectar cambios graduales de comportamiento.</td>
+          <td style="text-align:right">~$200–400</td>
+        </tr>
+        <tr>
+          <td><strong>Entrenamiento / deploy</strong></td>
+          <td><span class="code">AWS SageMaker</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Entrena modelos per-user en paralelo, despliega endpoints, gestiona versiones. Elimina necesidad de infraestructura ML propia.</td>
+          <td style="text-align:right">~$300–600</td>
+        </tr>
+        <tr>
+          <td><strong>Alternativa low-cost</strong></td>
+          <td><span class="code">AWS Rekognition / Lookout</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>AWS Lookout for Metrics hace anomaly detection sin código ML. Más caro por usuario pero elimina el trabajo de construir el modelo. Bueno para v1 rápida.</td>
+          <td style="text-align:right">~$500–900</td>
+        </tr>
+        <tr>
+          <td><strong>Inferencia en tiempo real</strong></td>
+          <td><span class="code">SageMaker Endpoints</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Cada usuario tiene su endpoint o se usa batch inference. Latencia &lt;200ms para scoring.</td>
+          <td style="text-align:right">~$150–300</td>
+        </tr>
+        <tr>
+          <td><strong>Alertas y notificaciones</strong></td>
+          <td><span class="code">Firebase + Twilio</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Push notifications (Firebase) + SMS críticos (Twilio). La lógica de prioridad de alertas sí es custom.</td>
+          <td style="text-align:right">~$100–200</td>
+        </tr>
+        <tr>
+          <td><strong>App móvil (dashboard)</strong></td>
+          <td><span class="code">React Native + Expo</span></td>
+          <td style="text-align:center"><span class="tag-diy">Construir</span></td>
+          <td>Codebase único iOS + Android. Consume la API REST del backend. Muestra timeline de actividad, alertas, resumen diario.</td>
+          <td style="text-align:right">~$0 (dev cost)</td>
+        </tr>
+        <tr>
+          <td><strong>LLM para resúmenes</strong></td>
+          <td><span class="code">Claude API / GPT-4o mini</span></td>
+          <td style="text-align:center"><span class="tag-buy">Comprar</span></td>
+          <td>Convierte los datos de sensores en lenguaje natural: "Tu mamá estuvo activa desde las 7am, desayunó, salió al jardín." El usuario lee frases, no datos crudos.</td>
+          <td style="text-align:right">~$80–200</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BUILD VS BUY DECISION -->
+  <div class="section">
+    <div class="sec-label">Estrategia de ejecución</div>
+    <div class="sec-title">La decisión más importante: ¿qué es el moat?</div>
+
+    <div class="decision-grid">
+      <div class="decision-card build">
+        <div class="dc-header">Construir → aquí está el moat</div>
+        <div class="dc-body">Lo que no puede comprar ningún competidor porque es específico de CareGuard:</div>
+        <ul class="dc-list">
+          <li>Lógica de extracción de features conductuales (qué medir, cómo ponderarlo)</li>
+          <li>El modelo per-user con sus datos históricos acumulados</li>
+          <li>La lógica de priorización de alertas (qué es urgente vs. normal)</li>
+          <li>El sistema de feedback que re-calibra el modelo con input familiar</li>
+          <li>Los resúmenes en lenguaje natural personalizados por persona</li>
+          <li>La detección de cambios graduales de comportamiento (el feature diferenciador)</li>
+        </ul>
+      </div>
+      <div class="decision-card buy">
+        <div class="dc-header">Comprar → infraestructura genérica</div>
+        <div class="dc-body">Lo que existe y es mejor comprarlo que construirlo:</div>
+        <ul class="dc-list">
+          <li>AWS IoT Core para la conectividad de sensores</li>
+          <li>SageMaker para entrenamiento y deployment de modelos</li>
+          <li>Firebase para push notifications</li>
+          <li>Twilio para SMS de emergencia</li>
+          <li>Claude API para generación de resúmenes en lenguaje natural</li>
+          <li>Stripe para billing, Intercom para soporte</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- COST AT SCALE -->
+  <div class="section">
+    <div class="sec-label">Economía del sistema de IA</div>
+    <div class="sec-title">Costo de la IA por usuario — a diferentes escalas</div>
+
+    <div class="cost-grid">
+      <div class="cost-card">
+        <div class="cc-label">100 usuarios activos</div>
+        <div class="cc-value">~$3.50</div>
+        <div class="cc-unit">/ usuario / mes</div>
+        <div class="cc-detail">Fase beta. Costo alto porque la infraestructura fija (IoT Core, SageMaker base) se divide entre pocos usuarios.</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">1,000 usuarios activos</div>
+        <div class="cc-value">~$1.20</div>
+        <div class="cc-unit">/ usuario / mes</div>
+        <div class="cc-detail">Los costos fijos se diluyen. La infra total ronda $1,200/mo — dentro del 18% de COGS modelado.</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">5,000 usuarios activos</div>
+        <div class="cc-value">~$0.70</div>
+        <div class="cc-unit">/ usuario / mes</div>
+        <div class="cc-detail">Economías de escala en SageMaker y IoT Core. La IA representa menos del 5% del ingreso por usuario.</div>
+      </div>
+      <div class="cost-card">
+        <div class="cc-label">Ingreso por usuario (Family)</div>
+        <div class="cc-value">$17</div>
+        <div class="cc-unit">/ usuario / mes</div>
+        <div class="cc-detail">A 1,000 usuarios, el costo de IA es ~7% del ingreso. Margen bruto de IA: &gt;93%.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TALENT -->
+  <div class="section">
+    <div class="sec-label">Talento necesario</div>
+    <div class="sec-title">Qué perfil contratar y cuándo</div>
+
+    <div class="talent-grid">
+      <div class="talent-card">
+        <div class="tc-role">CTO / Ingeniero full-stack + ML</div>
+        <div class="tc-when">Desde el día 1 · Co-founder ideal</div>
+        <div class="tc-resp">Debe saber: Python, AWS, React Native, y tener nociones de scikit-learn. No necesita ser PhD en ML. Con tutoriales de AWS SageMaker y los papers de Isolation Forest puede construir la v1. El 80% del trabajo es ingeniería de datos, no ciencia de datos.</div>
+        <div class="tc-cost">Co-founder equity · $20K año 1</div>
+      </div>
+      <div class="talent-card">
+        <div class="tc-role">ML Engineer (primera contratación técnica)</div>
+        <div class="tc-when">Año 2 · Post 500 usuarios</div>
+        <div class="tc-resp">Especialista en series temporales y anomaly detection. Mejora el modelo de Isolation Forest a LSTM. Construye el sistema de re-entrenamiento automático. Optimiza el pipeline de features. Se puede contratar freelance para la v2 (~3 meses de contrato).</div>
+        <div class="tc-cost">$55–75K/año · o $15–20K freelance por proyecto</div>
+      </div>
+      <div class="talent-card">
+        <div class="tc-role">Data Engineer</div>
+        <div class="tc-when">Año 3 · Post 2,000 usuarios</div>
+        <div class="tc-resp">Cuando el volumen de datos de sensores se vuelve significativo, se necesita alguien que optimice el pipeline de ingesta, compression de datos históricos, y la arquitectura de features en tiempo real. También fundamental para la EIPDP (Chile) y auditorías.</div>
+        <div class="tc-cost">$60–80K/año</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ROADMAP ML -->
+  <div class="section">
+    <div class="sec-label">Roadmap de IA</div>
+    <div class="sec-title">Evolución del sistema por etapas — no construir todo de una vez</div>
+
+    <div class="roadmap">
+      <div class="rm-row">
+        <div class="rm-period">Meses 1–3<br>MVP</div>
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-title">Reglas deterministas — sin ML real</div>
+          <div class="rm-detail">La v1 no necesita ML. Son reglas simples: "si no hay movimiento en 3 horas entre las 8am y 8pm → alerta". "Si la puerta del baño no se abrió en 24 horas → alerta". Esto se puede construir en 2 semanas con Lambda + DynamoDB y ya resuelve el 70% del valor del producto.</div>
+          <div class="rm-tags"><span class="rm-tag">Python</span><span class="rm-tag">AWS Lambda</span><span class="rm-tag">DynamoDB</span><span class="rm-tag">Reglas hardcoded</span></div>
+        </div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-period">Meses 4–9<br>v1 ML</div>
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-title">Isolation Forest per-user — baselines estadísticos</div>
+          <div class="rm-detail">Con los datos de los primeros 100 usuarios, entrenar el primer modelo estadístico por persona. Isolation Forest es robusto, interpretable y funciona bien con pocos datos. Re-entrenamiento semanal en SageMaker. Los umbrales de alerta se calibran con feedback de familias.</div>
+          <div class="rm-tags"><span class="rm-tag">scikit-learn</span><span class="rm-tag">SageMaker</span><span class="rm-tag">Isolation Forest</span><span class="rm-tag">Feedback loop</span></div>
+        </div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-period">Año 2<br>v2 ML</div>
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-title">LSTM / Autoencoder — dependencias temporales complejas</div>
+          <div class="rm-detail">Con 12+ meses de datos por usuario, entrenar redes neuronales que capturen patrones de largo plazo: cambios estacionales, variaciones por día de la semana, correlaciones entre sensores. Detectar deterioro gradual de comportamiento — el feature de mayor valor para familias con padres con demencia.</div>
+          <div class="rm-tags"><span class="rm-tag">PyTorch</span><span class="rm-tag">LSTM</span><span class="rm-tag">SageMaker Training Jobs</span><span class="rm-tag">Drift detection</span></div>
+        </div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-period">Año 2–3<br>LLM layer</div>
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-title">Resúmenes en lenguaje natural — Claude API</div>
+          <div class="rm-detail">El modelo de anomalías genera scores y eventos. Un LLM (Claude API o GPT-4o mini) convierte esos datos en el resumen diario en lenguaje natural: "Tu mamá tuvo un día activo. Se levantó a las 7:15am, desayunó, estuvo en el jardín 40 minutos. Algo inusual: no fue a la cocina en la tarde, que es su hábito habitual." Costo: ~$0.002 por resumen diario.</div>
+          <div class="rm-tags"><span class="rm-tag">Claude API</span><span class="rm-tag">Prompt engineering</span><span class="rm-tag">Structured outputs</span></div>
+        </div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-period">Año 3+<br>v3 ML</div>
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-title">Modelos multiusuario — aprendizaje de cohortes</div>
+          <div class="rm-detail">Con miles de usuarios, entrenar modelos que transfieran aprendizaje entre personas similares (misma edad, condición, tipo de hogar). Un modelo pre-entrenado en 1,000 abuelos con diabetes puede calibrarse para un nuevo usuario en 3 días en lugar de 21. Reduce el tiempo de aprendizaje inicial y mejora el baseline desde el día 1.</div>
+          <div class="rm-tags"><span class="rm-tag">Transfer learning</span><span class="rm-tag">Federated learning</span><span class="rm-tag">Cohorte por condición</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="vd-title">La respuesta directa a tu pregunta</div>
+    <div class="vd-body">
+      <span class="vd-highlight">¿Puede la IA aprender a cada usuario por separado y entregarle esa información a la app? Sí, absolutamente.</span> Es lo que hace Apple Watch con el ritmo cardíaco de cada persona, y lo que hacen los sistemas de fraude bancario con cada tarjeta.<br><br>
+      <span class="vd-highlight">¿Necesitas un equipo de investigadores en IA? No.</span> La v1 son reglas deterministas construidas en 2 semanas. La v1.5 es Isolation Forest en SageMaker, que un CTO con Python puede implementar en 6–8 semanas. El ML avanzado (LSTM, transfer learning) es Año 2.<br><br>
+      <span class="vd-highlight">¿Cuánto cuesta tecnológicamente?</span> ~$1,200–1,650/mes para 1,000 usuarios — ya modelado en el plan financiero. La IA representa menos del 10% del ingreso por usuario. El margen bruto del sistema de IA es &gt;90%.<br><br>
+      <span class="vd-highlight">¿Qué es lo más difícil?</span> No el ML — la ingeniería de features. Decidir qué medir (¿la duración en el baño? ¿la frecuencia de visitas a la cocina? ¿la variabilidad del horario de levantarse?) es el 80% del trabajo intelectual. Eso se descubre hablando con las primeras 30 familias.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
