@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Riesgos Legales por Región</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#1a1a1a;padding:2rem 1.5rem;font-size:14px}
+  .doc{max-width:920px;margin:0 auto}
+  h1{font-size:26px;font-weight:500;color:#111;margin-bottom:.25rem}
+  .subtitle{font-size:14px;color:#888;margin-bottom:2.5rem}
+  .section{margin-bottom:2.5rem}
+  .badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:8px;margin-bottom:.65rem}
+  .badge-blue{color:#185FA5;background:#E6F1FB}
+  .badge-red{color:#A32D2D;background:#FCEBEB}
+  .badge-green{color:#27500A;background:#EAF3DE}
+  .badge-amber{color:#633806;background:#FAEEDA}
+  .section-title{font-size:17px;font-weight:500;color:#111;margin-bottom:.65rem;line-height:1.35}
+  .body-text{font-size:14px;color:#555;line-height:1.75}
+  .divider{border:none;border-top:1px solid #e8e8e4;margin:2rem 0}
+
+  /* Region blocks */
+  .region{background:#fff;border:1px solid #e0ddd5;border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;position:relative}
+  .region-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #eee}
+  .region-flag{font-size:28px;flex-shrink:0;margin-top:2px}
+  .region-name{font-size:18px;font-weight:500;color:#111;margin-bottom:3px}
+  .region-law{font-size:12px;color:#185FA5;font-weight:500}
+  .region-level{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;margin-left:10px}
+  .level-high{background:#FCEBEB;color:#A32D2D}
+  .level-med{background:#FAEEDA;color:#633806}
+  .level-low{background:#EAF3DE;color:#27500A}
+
+  .risks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:1.25rem}
+  .risk-card{background:#f8f8f6;border-radius:10px;padding:1rem;border-left:3px solid #E24B4A}
+  .risk-card.amber{border-left-color:#EF9F27}
+  .risk-card.green{border-left-color:#63992  2}
+  .risk-title{font-size:13px;font-weight:500;color:#111;margin-bottom:4px}
+  .risk-desc{font-size:12px;color:#666;line-height:1.6}
+  .risk-fine{font-size:11px;font-weight:600;color:#A32D2D;margin-top:5px}
+  .risk-fine.amber{color:#633806}
+
+  .mitigation-box{background:#EAF3DE;border-radius:10px;padding:1rem 1.1rem}
+  .mit-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#27500A;margin-bottom:8px}
+  .mit-list{display:flex;flex-direction:column;gap:5px}
+  .mit-item{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#3B6D11;line-height:1.5}
+  .mit-check{color:#27500A;font-weight:700;flex-shrink:0;margin-top:1px}
+
+  .key-action{background:#fff;border:1px solid #C0DD97;border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;color:#3B6D11;font-weight:500}
+
+  /* Priority matrix */
+  .matrix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:1rem}
+  .matrix-card{border-radius:10px;padding:1rem;text-align:center}
+  .matrix-card.critical{background:#FCEBEB;border:1px solid #F09595}
+  .matrix-card.important{background:#FAEEDA;border:1px solid #FAC775}
+  .matrix-card.monitor{background:#EAF3DE;border:1px solid #C0DD97}
+  .matrix-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .matrix-card.critical .matrix-title{color:#A32D2D}
+  .matrix-card.important .matrix-title{color:#633806}
+  .matrix-card.monitor .matrix-title{color:#27500A}
+  .matrix-items{font-size:12px;line-height:1.7}
+  .matrix-card.critical .matrix-items{color:#791F1F}
+  .matrix-card.important .matrix-items{color:#854F0B}
+  .matrix-card.monitor .matrix-items{color:#3B6D11}
+
+  /* Timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;margin-top:1rem}
+  .tl-row{display:flex;gap:16px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #eee}
+  .tl-row:last-child{border-bottom:none}
+  .tl-when{min-width:120px;font-size:12px;font-weight:600;color:#185FA5}
+  .tl-what{flex:1}
+  .tl-action{font-size:13px;font-weight:500;color:#111;margin-bottom:3px}
+  .tl-detail{font-size:12px;color:#666;line-height:1.55}
+  .tl-cost{font-size:11px;color:#185FA5;font-weight:500;margin-top:3px}
+
+  /* Compliance checklist */
+  .checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:1rem}
+  .check-group{background:#fff;border:1px solid #e0ddd5;border-radius:10px;padding:1rem}
+  .check-group-title{font-size:12px;font-weight:600;color:#111;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.05em}
+  .check-item{display:flex;gap:8px;font-size:12px;color:#555;line-height:1.5;padding:4px 0;border-bottom:1px dotted #eee}
+  .check-item:last-child{border-bottom:none}
+  .ci-box{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+  /* Advantage box */
+  .advantage-box{background:#E6F1FB;border:1px solid #B5D4F4;border-radius:12px;padding:1.25rem;margin-top:2rem}
+  .adv-title{font-size:15px;font-weight:500;color:#185FA5;margin-bottom:.5rem}
+  .adv-body{font-size:13px;color:#185FA5;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div style="margin-bottom:2.5rem">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#999;margin-bottom:.4rem">CareGuard · Legal & Compliance</div>
+    <h1>Riesgos legales por región y cómo mitigarlos</h1>
+    <div class="subtitle">Análisis actualizado 2025–2026 · US · Canadá · Colombia · México · Chile</div>
+  </div>
+
+  <!-- CONTEXT -->
+  <div class="section">
+    <div class="badge badge-blue">Contexto crítico para CareGuard</div>
+    <div class="section-title">Por qué el marco legal es más favorable de lo que parece</div>
+    <div class="body-text">CareGuard tiene una ventaja estructural frente a muchas apps de salud: <strong>no recopila datos médicos clínicos</strong> (diagnósticos, historiales, medicamentos), sino datos de comportamiento y movimiento mediante sensores. Esto lo excluye del régimen más estricto de muchos marcos regulatorios (HIPAA, CMIA). Sin embargo, los datos de movimiento de personas mayores en su hogar califican como datos sensibles en casi todas las jurisdicciones — y la IA que los analiza genera obligaciones adicionales. La clave es diseñar el producto con privacidad desde el origen ("privacy by design") y documentar cada decisión.</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- USA -->
+  <div class="region">
+    <div class="region-header">
+      <div class="region-flag">🇺🇸</div>
+      <div>
+        <div class="region-name">Estados Unidos <span class="region-level level-med">Riesgo: Medio</span></div>
+        <div class="region-law">CCPA/CPRA (California) · FTC Act · Leyes estatales · HIPAA (aplicación marginal)</div>
+      </div>
+    </div>
+
+    <div class="risks-grid">
+      <div class="risk-card">
+        <div class="risk-title">HIPAA — ¿aplica o no?</div>
+        <div class="risk-desc">CareGuard NO es una entidad cubierta por HIPAA porque no es un proveedor de salud, aseguradora ni clearing house. Los sensores de movimiento no son PHI (Protected Health Information). Sin embargo, si se integra con médicos o aseguradoras en el futuro, se convierte en Business Associate y activa HIPAA completamente.</div>
+        <div class="risk-fine">Multa HIPAA: hasta $1.9M por violación · No aplica hoy, riesgo futuro</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">CCPA / CPRA (California)</div>
+        <div class="risk-desc">Aplica desde el Año 2 si supera 100,000 usuarios o $26.6M de ingresos anuales. Exige: derecho a conocer qué datos se recopilan, derecho a eliminarlos, derecho a no vender datos, política de privacidad actualizada anualmente. La IA que perfila comportamiento activa las reglas de "automated decision-making".</div>
+        <div class="risk-fine amber">Multa CPRA: hasta $7,500 por violación intencional</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">FTC Act — publicidad y claims</div>
+        <div class="risk-desc">La FTC puede investigar si CareGuard hace afirmaciones sobre seguridad o salud que no se pueden comprobar. Ejemplo: "detectamos el 100% de las caídas" sin evidencia es un claim fraudulento. También regula las prácticas de datos de apps de consumo directamente — sin necesidad de HIPAA.</div>
+        <div class="risk-fine amber">Multa FTC: hasta $51,744 por violación por día</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Responsabilidad civil por fallo de alerta</div>
+        <div class="risk-desc">Si la app falla en enviar una alerta y un adulto mayor fallece o se lesiona gravemente, la familia puede demandar por negligencia. El riesgo es mayor si los Terms of Service no delimitan claramente que CareGuard es una herramienta de apoyo, no un servicio médico de emergencia.</div>
+        <div class="risk-fine">Riesgo: demanda civil de alto impacto reputacional</div>
+      </div>
+    </div>
+
+    <div class="mitigation-box">
+      <div class="mit-title">Mitigaciones clave — Estados Unidos</div>
+      <div class="mit-list">
+        <div class="mit-item"><div class="mit-check">✓</div><div>Incluir disclaimer explícito en onboarding: "CareGuard es una herramienta de monitoreo del hogar, no un dispositivo médico ni un servicio de emergencias." Esto aleja a la app de la jurisdicción HIPAA y limita la responsabilidad civil.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Redactar Terms of Service con cláusula de limitación de responsabilidad por fallas técnicas, interrupciones de conectividad y falsos negativos. Revisión legal ($1,500–2,500) antes de lanzamiento.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Política de privacidad CCPA-ready desde el Año 1 (aunque no sea obligatoria aún), con botón "Do Not Sell My Data" y mecanismo de eliminación de cuenta y datos. Costo: ~$800 con abogado de privacidad.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>No hacer claims de rendimiento no verificables en marketing. Usar lenguaje como "detectamos anomalías en el patrón de movimiento" en lugar de "detectamos caídas". La distinción es crítica ante la FTC.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Nunca integrar con proveedores de salud o aseguradoras sin revisar si activa el régimen HIPAA de Business Associate — requiere un Business Associate Agreement (BAA) formal.</div></div>
+      </div>
+      <div class="key-action">Inversión legal año 1 (US): ~$3,000–5,000 · Abogado de privacidad + ToS + política de privacidad</div>
+    </div>
+  </div>
+
+  <!-- CANADA -->
+  <div class="region">
+    <div class="region-header">
+      <div class="region-flag">🇨🇦</div>
+      <div>
+        <div class="region-name">Canadá <span class="region-level level-med">Riesgo: Medio-Alto</span></div>
+        <div class="region-law">PIPEDA (federal) · Ley 25 Quebec · PHIPA Ontario · Bill C-27 / CPPA (pendiente)</div>
+      </div>
+    </div>
+
+    <div class="risks-grid">
+      <div class="risk-card amber">
+        <div class="risk-title">PIPEDA — IoT y datos de comportamiento</div>
+        <div class="risk-desc">La Oficina del Comisionado de Privacidad de Canadá publicó guías específicas para fabricantes de IoT: aplica PIPEDA si los sensores recopilan información personal (y el movimiento en el hogar de una persona identificable lo es). Exige: consentimiento informado, propósito específico declarado, retención mínima de datos, notificación de brechas.</div>
+        <div class="risk-fine amber">Multa PIPEDA actual: hasta CAD $100,000 · CPPA pendiente: hasta CAD $25M o 5% ingresos globales</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Quebec Ley 25 — el más estricto de Canadá</div>
+        <div class="risk-desc">Quebec tiene su propia ley, más exigente que PIPEDA. Requiere: evaluación de impacto de privacidad (PIA) antes de lanzar, consentimiento explícito para datos sensibles, responsable de protección de datos designado, registro de incidentes. Si se lanzan campañas en Quebec, aplica de inmediato.</div>
+        <div class="risk-fine">Multa Ley 25: hasta CAD $25M o 4% ingresos globales</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">CPPA (Bill C-27) — reforma inminente</div>
+        <div class="risk-desc">El proyecto de ley que reemplazaría PIPEDA murió en enero 2025 por prorogación del Parlamento, pero el gobierno anunció que presentará una nueva versión en 2025–2026 con multas de hasta CAD $25M o 5% de ingresos globales. Las empresas que lancen en Canadá deben diseñar para el régimen futuro, no solo el actual.</div>
+        <div class="risk-fine amber">Riesgo: legislación más estricta durante el ciclo de vida del producto</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Transferencia transfronteriza de datos</div>
+        <div class="risk-desc">Si los datos de usuarios canadienses se procesan en servidores en EE.UU. (AWS us-east, por ejemplo), PIPEDA exige informarlo a los usuarios y garantizar protección equivalente. Las guías de la OPC dicen que el cloud extranjero es permitido, pero el contrato con el proveedor debe incluir cláusulas de privacidad.</div>
+        <div class="risk-fine">Riesgo: investigación OPC y pérdida de confianza del usuario</div>
+      </div>
+    </div>
+
+    <div class="mitigation-box">
+      <div class="mit-title">Mitigaciones clave — Canadá</div>
+      <div class="mit-list">
+        <div class="mit-item"><div class="mit-check">✓</div><div>Realizar un Privacy Impact Assessment (PIA) antes del lanzamiento en Canadá — obligatorio en Quebec, buena práctica en el resto. Costo: ~$1,500 con consultor de privacidad canadiense.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Designar un responsable de protección de datos (puede ser un founder en fase inicial). Documentar este rol formalmente.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Usar AWS ca-central-1 (Montreal) para datos de usuarios canadienses — elimina el riesgo de transferencia transfronteriza y es PR-positive en el mercado.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Diseñar la arquitectura de datos para cumplir con CPPA desde ya — consentimiento granular, derecho a portabilidad, retención limitada. Adaptar es más barato que reconstruir.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Política de privacidad separada para usuarios canadienses (o sección específica) con los derechos bajo PIPEDA claramente descritos en lenguaje llano.</div></div>
+      </div>
+      <div class="key-action">Inversión legal año 1 (Canadá): ~$2,000–3,500 · PIA + política de privacidad + cláusulas AWS</div>
+    </div>
+  </div>
+
+  <!-- COLOMBIA -->
+  <div class="region">
+    <div class="region-header">
+      <div class="region-flag">🇨🇴</div>
+      <div>
+        <div class="region-name">Colombia <span class="region-level level-high">Riesgo: Alto</span></div>
+        <div class="region-law">Ley 1581 de 2012 · Decreto 1377 de 2013 · Proyecto reforma 2025 · Vigilancia SIC</div>
+      </div>
+    </div>
+
+    <div class="risks-grid">
+      <div class="risk-card">
+        <div class="risk-title">Datos sensibles — categoría especial</div>
+        <div class="risk-desc">La Ley 1581 clasifica los datos de salud y comportamiento de adultos mayores como datos sensibles, que requieren consentimiento explícito, escrito o equivalente tecnológico. El monitoreo de movimiento en el hogar puede ser interpretado como dato de salud indirecta. La SIC tiene criterio amplio en esta clasificación.</div>
+        <div class="risk-fine">Multa SIC actual: hasta 2,000 SMMLV (~$500M COP / ~$115K USD)</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Registro ante la SIC — RNBD</div>
+        <div class="risk-desc">Toda empresa que maneje bases de datos de colombianos debe registrarse en el Registro Nacional de Bases de Datos (RNBD) de la SIC. Este registro es obligatorio, gratuito y tiene plazo. La SIC ha multado a empresas del sector salud y telecomunicaciones por no tenerlo actualizado.</div>
+        <div class="risk-fine">Incumplimiento: multa + cierre de la base de datos</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Reforma Ley 1581 — multas hasta 5% ingresos</div>
+        <div class="risk-desc">En agosto 2025, el Gobierno colombiano radicó un proyecto de ley para actualizar la Ley 1581, que propone aumentar sanciones hasta 10,000 SMMLV o el 5% de los ingresos operacionales. Si se aprueba (probable en 2026), las multas se multiplican. Las empresas deben adaptarse ahora.</div>
+        <div class="risk-fine">Riesgo: multas de hasta ~$2.3M USD con la reforma aprobada</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">Aviso de privacidad y autorización del titular</div>
+        <div class="risk-desc">La ley exige que el adulto mayor monitoreado (el titular de los datos) otorgue autorización explícita — no basta con que el hijo pague la suscripción. Si el adulto mayor no puede dar consentimiento (demencia avanzada), debe haber un representante legal autorizado. Esto es un punto de fricción en el onboarding.</div>
+        <div class="risk-fine amber">Riesgo: recolección de datos sin consentimiento válido es causal de sanción</div>
+      </div>
+    </div>
+
+    <div class="mitigation-box">
+      <div class="mit-title">Mitigaciones clave — Colombia</div>
+      <div class="mit-list">
+        <div class="mit-item"><div class="mit-check">✓</div><div>Registrar la base de datos de usuarios colombianos en el RNBD de la SIC antes del lanzamiento. Proceso online, gratuito, demora ~1 semana. Obligatorio.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Diseñar un flujo de doble consentimiento en el onboarding: (1) el suscriptor (hijo/familiar) y (2) el adulto mayor monitoreado. El adulto mayor recibe un aviso simplificado y da su autorización explícita mediante código o firma digital.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Para casos de adultos con deterioro cognitivo: incluir en onboarding un campo de "representante legal autorizado" con instrucciones claras. Cubrir este edge case desde el inicio.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Contratar abogado local (Bogotá) para revisar los ToS y políticas en español bajo la Ley 1581. Costo estimado: $800–1,500 USD. No usar solo plantillas internacionales.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Monitorear el avance del proyecto de reforma a la Ley 1581. Si se aprueba, ajustar arquitectura de datos para cumplir con los nuevos estándares antes de que entre en vigor.</div></div>
+      </div>
+      <div class="key-action">Inversión legal año 1 (Colombia): ~$1,500–2,500 · Abogado local + registro SIC + flujo consentimiento</div>
+    </div>
+  </div>
+
+  <!-- MEXICO -->
+  <div class="region">
+    <div class="region-header">
+      <div class="region-flag">🇲🇽</div>
+      <div>
+        <div class="region-name">México <span class="region-level level-med">Riesgo: Medio</span></div>
+        <div class="region-law">LFPDPPP 2010 · Reglamento 2011 · INAI · NOM-024 (sector salud)</div>
+      </div>
+    </div>
+
+    <div class="risks-grid">
+      <div class="risk-card amber">
+        <div class="risk-title">LFPDPPP — Aviso de Privacidad obligatorio</div>
+        <div class="risk-desc">La Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) exige un Aviso de Privacidad específico que informe finalidades del tratamiento, datos recabados, transferencias a terceros y derechos ARCO. Debe estar disponible antes de cualquier recopilación de datos.</div>
+        <div class="risk-fine amber">Multa INAI: hasta 320,000 días de salario mínimo (~$1.7M USD)</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">Datos sensibles — consentimiento expreso</div>
+        <div class="risk-desc">Los datos relacionados con la salud y la vida personal se clasifican como datos sensibles en México. Para tratarlos se requiere consentimiento expreso, no tácito. El monitoreo de un adulto mayor en su hogar califica. El INAI ha sido activo en enforcement contra apps de consumo.</div>
+        <div class="risk-fine amber">Riesgo: sanción + orden de cese de operaciones</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Derechos ARCO — obligación de canal</div>
+        <div class="risk-desc">La ley obliga a habilitar un mecanismo para que usuarios ejerzan los Derechos ARCO: Acceso, Rectificación, Cancelación y Oposición. Debe estar en español, ser gratuito y responderse en 20 días hábiles. Muchas startups no lo implementan y son sancionadas.</div>
+        <div class="risk-fine">Riesgo: queja ante INAI → investigación → multa</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">Transferencias a terceros (AWS, Twilio)</div>
+        <div class="risk-desc">Toda transferencia de datos personales a terceros (incluyendo proveedores cloud en EE.UU.) debe estar declarada en el Aviso de Privacidad. Si los datos viajan a servidores fuera de México, se deben incluir cláusulas contractuales de nivel de protección equivalente.</div>
+        <div class="risk-fine">Riesgo: transferencia no declarada = violación autónoma</div>
+      </div>
+    </div>
+
+    <div class="mitigation-box">
+      <div class="mit-title">Mitigaciones clave — México</div>
+      <div class="mit-list">
+        <div class="mit-item"><div class="mit-check">✓</div><div>Redactar Aviso de Privacidad en español específico para México, que mencione explícitamente: los sensores de movimiento, la IA de análisis conductual, los proveedores cloud (AWS), y el nombre del responsable del tratamiento registrado en México.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Implementar canal ARCO funcional desde el lanzamiento: formulario en app + email dedicado + tiempo de respuesta de 20 días documentado. Herramientas como Osano o Transcend pueden automatizar esto ($0–200/mo).</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Incluir cláusulas de transferencia internacional en contratos con AWS, Twilio y SendGrid. Estos proveedores tienen plantillas estándar — simplemente hay que ejecutarlas y conservar la documentación.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Consentimiento en dos pasos en el onboarding para usuarios mexicanos: pantalla de Aviso de Privacidad + confirmación explícita antes de activar los sensores. Guardar log de consentimiento con timestamp.</div></div>
+      </div>
+      <div class="key-action">Inversión legal año 1 (México): ~$800–1,500 · Abogado local + aviso de privacidad + canal ARCO</div>
+    </div>
+  </div>
+
+  <!-- CHILE -->
+  <div class="region">
+    <div class="region-header">
+      <div class="region-flag">🇨🇱</div>
+      <div>
+        <div class="region-name">Chile <span class="region-level level-high">Riesgo: Alto (en transición)</span></div>
+        <div class="region-law">Ley 19.628 (vigente) · Ley 21.719 (publicada dic 2024, vigencia dic 2026) · Agencia de Protección de Datos</div>
+      </div>
+    </div>
+
+    <div class="risks-grid">
+      <div class="risk-card">
+        <div class="risk-title">Ley 21.719 — la nueva ley tipo GDPR</div>
+        <div class="risk-desc">Chile publicó en diciembre 2024 una ley de protección de datos alineada con el GDPR europeo, que entra en vigor en diciembre 2026. Crea la Agencia de Protección de Datos Personales, obliga al "privacy by design", requiere Evaluación de Impacto (EIPDP) para tratamiento de datos sensibles con IA, y establece un Delegado de Protección de Datos (DPO).</div>
+        <div class="risk-fine">Multa desde dic 2026: hasta 20,000 UTM (~$1.4M USD) con agravantes</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-title">EIPDP — evaluación de impacto obligatoria</div>
+        <div class="risk-desc">La Ley 21.719 obliga a realizar una Evaluación de Impacto en Protección de Datos Personales cuando se procesen datos sensibles con sistemas automatizados o IA. El análisis conductual de adultos mayores cae exactamente en este supuesto. Debe completarse antes de lanzar el servicio en Chile post-2026.</div>
+        <div class="risk-fine">Sin EIPDP: infracción grave · multa + posible suspensión del servicio</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">Período de transición — ventana táctica</div>
+        <div class="risk-desc">Hasta diciembre 2026 rige la Ley 19.628, que es más laxa. Esto da a CareGuard una ventana de 12–18 meses para lanzar en Chile bajo el régimen actual y adaptar la arquitectura antes de que entre en vigor la nueva ley. Hay que usarla estratégicamente.</div>
+        <div class="risk-fine amber">Riesgo: lanzar tarde y no tener tiempo de adaptar antes de dic 2026</div>
+      </div>
+      <div class="risk-card amber">
+        <div class="risk-title">Consentimiento expreso para datos sensibles</div>
+        <div class="risk-desc">Bajo ambas leyes (19.628 y 21.719), los datos de salud y comportamiento de personas naturales exigen consentimiento expreso. La nueva ley requiere que sea "libre, específico, informado e inequívoco" — el mismo estándar GDPR. Un consentimiento genérico en los ToS no es válido.</div>
+        <div class="risk-fine amber">Riesgo: consentimiento inválido invalida todo el tratamiento de datos</div>
+      </div>
+    </div>
+
+    <div class="mitigation-box">
+      <div class="mit-title">Mitigaciones clave — Chile</div>
+      <div class="mit-list">
+        <div class="mit-item"><div class="mit-check">✓</div><div>Lanzar en Chile durante 2025–2026 bajo la Ley 19.628 vigente, pero diseñar la arquitectura de datos ya compatible con la Ley 21.719. El costo de rediseñar después es 5–10x mayor que hacerlo bien desde el inicio.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Realizar la EIPDP (Evaluación de Impacto) voluntariamente en 2025, antes de que sea obligatoria. Esto sirve como documentación proactiva y reduce riesgo de sanción post-2026. Costo: ~$1,000–2,000 con consultor local.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Designar un DPO interno (puede ser el CEO o CTO en fase inicial). Documentar el rol. La ley permite que en PyMEs el dueño o máxima autoridad asuma esta función.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Implementar flujo de consentimiento granular estilo GDPR: pantalla por pantalla, propósito específico por tipo de dato, con opción de retirar el consentimiento. Reutilizable para todos los mercados.</div></div>
+        <div class="mit-item"><div class="mit-check">✓</div><div>Mantener un registro de actividades de tratamiento (RAT) desde el inicio. La nueva ley lo exige y es la base de toda defensa ante la Agencia.</div></div>
+      </div>
+      <div class="key-action">Inversión legal año 1 (Chile): ~$1,500–2,500 · Consultor local + EIPDP voluntaria + arquitectura compatible 21.719</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PRIORITY MATRIX -->
+  <div class="section">
+    <div class="badge badge-red">Matriz de prioridad</div>
+    <div class="section-title">Qué atender primero — clasificación por urgencia e impacto</div>
+    <div class="matrix-grid">
+      <div class="matrix-card critical">
+        <div class="matrix-title">Crítico · Hacer antes de lanzar</div>
+        <div class="matrix-items">
+          ToS con limitación de responsabilidad<br>
+          Política de privacidad (EN + ES)<br>
+          Doble consentimiento en onboarding<br>
+          Registro RNBD en Colombia<br>
+          Aviso de Privacidad México<br>
+          Canal ARCO funcional
+        </div>
+      </div>
+      <div class="matrix-card important">
+        <div class="matrix-title">Importante · Año 1</div>
+        <div class="matrix-items">
+          PIA para Canadá (Quebec)<br>
+          AWS ca-central-1 para usuarios CA<br>
+          Cláusulas transferencia internacional<br>
+          EIPDP voluntaria Chile<br>
+          Registro DPO interno<br>
+          Monitoreo reforma Ley 1581 Colombia
+        </div>
+      </div>
+      <div class="matrix-card monitor">
+        <div class="matrix-title">Monitorear · Año 2–3</div>
+        <div class="matrix-items">
+          CPPA Canadá (cuando se apruebe)<br>
+          CCPA si supera umbrales en US<br>
+          Ley 21.719 Chile (dic 2026)<br>
+          HIPAA si se integra con médicos<br>
+          Reforma Ley 1581 Colombia<br>
+          Integraciones B2B con aseguradoras
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPLEMENTATION TIMELINE -->
+  <div class="section">
+    <div class="badge badge-blue">Plan de implementación legal</div>
+    <div class="section-title">Cronograma de cumplimiento por trimestre</div>
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-when">Mes 1–2 · Antes de lanzar</div>
+        <div class="tl-what">
+          <div class="tl-action">Documentos fundacionales</div>
+          <div class="tl-detail">Contratar abogado de privacidad bilingüe (US + LATAM). Redactar ToS y Privacy Policy. Implementar doble consentimiento en onboarding. Definir arquitectura de datos con retención mínima.</div>
+          <div class="tl-cost">Costo estimado: $3,000–5,000 USD · una sola vez</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">Mes 2–3 · Lanzamiento LATAM</div>
+        <div class="tl-what">
+          <div class="tl-action">Cumplimiento Colombia y México</div>
+          <div class="tl-detail">Registrar bases de datos en RNBD Colombia (SIC). Aviso de privacidad en español para México. Abogados locales en Bogotá y CDMX. Canal ARCO funcional en la app.</div>
+          <div class="tl-cost">Costo estimado: $2,000–3,500 USD · honorarios locales</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">Mes 6–9 · Canadá</div>
+        <div class="tl-what">
+          <div class="tl-action">Privacy Impact Assessment + infraestructura CA</div>
+          <div class="tl-detail">PIA formal con consultor canadiense. Migrar datos de usuarios canadienses a AWS ca-central-1. Política de privacidad con sección PIPEDA. Designar DPO interno.</div>
+          <div class="tl-cost">Costo estimado: $2,500–4,000 USD · PIA + migración infra</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">Mes 10–18 · Chile + prep 2026</div>
+        <div class="tl-what">
+          <div class="tl-action">EIPDP voluntaria + arquitectura Ley 21.719</div>
+          <div class="tl-detail">Evaluación de impacto voluntaria bajo la nueva ley chilena. Adaptar flujos de consentimiento para cumplir estándar GDPR-equivalente. Registro de actividades de tratamiento (RAT).</div>
+          <div class="tl-cost">Costo estimado: $1,500–2,500 USD</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-when">Año 2 · Monitoreo continuo</div>
+        <div class="tl-what">
+          <div class="tl-action">Revisión anual y adaptación a cambios legislativos</div>
+          <div class="tl-detail">Revisar cambios en CPPA Canadá, reforma Ley 1581 Colombia, entrada en vigor Ley 21.719 Chile. Actualizar políticas de privacidad anualmente (obligatorio en CCPA). Auditoría interna de datos.</div>
+          <div class="tl-cost">Costo estimado: $1,500–2,000 USD/año · retainer legal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLIANCE CHECKLIST -->
+  <div class="section">
+    <div class="badge badge-green">Checklist de compliance</div>
+    <div class="section-title">Lista de verificación operativa — antes de cada lanzamiento regional</div>
+    <div class="checklist">
+      <div class="check-group">
+        <div class="check-group-title">Documentos legales base</div>
+        <div class="check-item"><div class="ci-box"></div><div>Terms of Service con limitación de responsabilidad</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Política de privacidad (EN + ES) actualizada</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Aviso de privacidad específico por país (MX, CO)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Contratos con proveedores cloud (cláusulas de datos)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Política de retención y eliminación de datos</div></div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">Producto / onboarding</div>
+        <div class="check-item"><div class="ci-box"></div><div>Doble consentimiento: suscriptor + adulto mayor</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Log de consentimiento con timestamp en base de datos</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Canal ARCO/derechos funcional en la app</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Opción de eliminar cuenta y datos desde la app</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Disclaimer: "no es un dispositivo médico"</div></div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">Infraestructura técnica</div>
+        <div class="check-item"><div class="ci-box"></div><div>Encriptación en tránsito (TLS 1.2+) y en reposo (AES-256)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Datos CA en AWS ca-central-1 (Montreal)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Acceso por roles — mínimo privilegio necesario</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Plan de respuesta a brechas de datos documentado</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Logs de auditoría activados en producción</div></div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">Registros regulatorios</div>
+        <div class="check-item"><div class="ci-box"></div><div>Registro RNBD ante la SIC (Colombia)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>DPO designado y documentado (todos los mercados)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>PIA / EIPDP completada (Canadá, Chile)</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Registro de actividades de tratamiento (RAT) activo</div></div>
+        <div class="check-item"><div class="ci-box"></div><div>Revisión legal anual agendada</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL INVESTMENT -->
+  <div class="section">
+    <div class="badge badge-amber">Inversión legal total estimada</div>
+    <div class="section-title">Presupuesto de compliance — dentro del modelo financiero</div>
+    <div style="background:#fff;border:1px solid #e0ddd5;border-radius:12px;overflow:hidden;margin-top:1rem">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="background:#111;color:#fff">
+            <th style="padding:10px 14px;text-align:left;font-weight:600">Ítem</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:600">Año 1</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:600">Año 2</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:600">Año 3+</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #eee">
+            <td style="padding:9px 14px;color:#444">Abogado privacidad US (ToS, Privacy Policy)</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$3,500</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$800</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$800</td>
+          </tr>
+          <tr style="border-bottom:1px solid #eee;background:#fafafa">
+            <td style="padding:9px 14px;color:#444">Abogados locales LATAM (CO + MX + CL)</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$4,500</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$2,000</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$2,000</td>
+          </tr>
+          <tr style="border-bottom:1px solid #eee">
+            <td style="padding:9px 14px;color:#444">PIA Canadá + EIPDP Chile</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$3,000</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">—</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$1,000</td>
+          </tr>
+          <tr style="border-bottom:1px solid #eee;background:#fafafa">
+            <td style="padding:9px 14px;color:#444">Herramientas (consentimiento, ARCO, auditoría)</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$1,200</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$1,200</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">$2,400</td>
+          </tr>
+          <tr style="border-bottom:1px solid #eee">
+            <td style="padding:9px 14px;color:#444">Retainer legal anual (monitoreo regulatorio)</td>
+            <td style="padding:9px 14px;text-align:center;color:#666">—</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$2,000</td>
+            <td style="padding:9px 14px;text-align:center;color:#111;font-weight:500">$3,500</td>
+          </tr>
+          <tr style="background:#E6F1FB">
+            <td style="padding:10px 14px;font-weight:600;color:#185FA5">Total inversión legal</td>
+            <td style="padding:10px 14px;text-align:center;font-weight:700;color:#185FA5">~$12,200</td>
+            <td style="padding:10px 14px;text-align:center;font-weight:700;color:#185FA5">~$6,000</td>
+            <td style="padding:10px 14px;text-align:center;font-weight:700;color:#185FA5">~$9,700</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:.75rem;font-size:13px;color:#555">El ~$12,200 del Año 1 ya está contenido dentro de los $15,000 de G&A modelados en el plan financiero. No requiere presupuesto adicional.</div>
+  </div>
+
+  <div class="advantage-box">
+    <div class="adv-title">La ventaja competitiva del compliance bien hecho</div>
+    <div class="adv-body">Una startup que lanza con privacy by design, doble consentimiento y documentación clara tiene tres ventajas sobre competidores que ignoran esto: (1) <strong>no pierde tiempo ni dinero en crisis regulatorias</strong> cuando escala, (2) <strong>genera confianza con familias</strong> que van a entregar datos de sus padres, lo cual es un diferenciador de conversión real, y (3) <strong>está lista para levantar capital</strong> — los fondos de inversión hacen due diligence legal y el compliance ordenado acelera los procesos de fundraising. El costo de $12K en el Año 1 es el mejor ROI del presupuesto operativo.</div>
+  </div>
+
+</div>
+</body>
+</html>
