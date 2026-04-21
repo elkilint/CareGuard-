@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareGuard — Debida Diligencia del Fundador</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Epilogue:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --bg: #0f0e0c;
+  --surface: #1a1916;
+  --surface2: #222118;
+  --gold: #c9a84c;
+  --gold-lt: #f0d990;
+  --gold-dim: rgba(201,168,76,0.12);
+  --red: #e05c4a;
+  --red-dim: rgba(224,92,74,0.12);
+  --green: #4caf82;
+  --green-dim: rgba(76,175,130,0.12);
+  --blue: #5b8dee;
+  --blue-dim: rgba(91,141,238,0.12);
+  --amber: #e8943a;
+  --amber-dim: rgba(232,148,58,0.12);
+  --text: #e8e4db;
+  --muted: #7a7468;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ── Page ── */
+.page { max-width: 960px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+/* ── Hero ── */
+.hero {
+  padding: 3rem 0 2.5rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border2);
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -2rem; right: -2rem; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.hero-eyebrow {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+.hero-title span { color: var(--gold); font-style: italic; }
+.hero-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 620px;
+  line-height: 1.75;
+}
+.hero-tag {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  padding: 5px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+  letter-spacing: .08em;
+}
+
+/* ── Nav pills ── */
+.nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 3rem; }
+.nav-pill {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  padding: 5px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  color: var(--muted);
+  cursor: default;
+  letter-spacing: .05em;
+}
+
+/* ── Sections ── */
+.section { margin-bottom: 3.5rem; }
+.sec-eyebrow {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: .75rem;
+  line-height: 1.2;
+}
+.sec-body {
+  font-size: 14px;
+  color: #a09890;
+  line-height: 1.8;
+  max-width: 700px;
+  margin-bottom: 1.5rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+  position: relative;
+}
+.divider::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  top: -9px;
+  transform: translateX(-50%);
+  background: var(--bg);
+  padding: 0 14px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* ── Verdict banner ── */
+.verdict {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-top: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+.verdict-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.verdict-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: .35rem; }
+.verdict-body { font-size: 13px; color: #a09890; line-height: 1.7; }
+.verdict.warn { border-top-color: var(--red); }
+.verdict.ok { border-top-color: var(--green); }
+
+/* ── Area cards (6 DD areas) ── */
+.areas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 1.5rem 0; border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; }
+@media (max-width: 700px) { .areas { grid-template-columns: 1fr; } }
+.area-card {
+  background: var(--surface);
+  padding: 1.25rem;
+  cursor: default;
+  transition: background .2s;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.area-card:nth-child(3n) { border-right: none; }
+.area-card:nth-last-child(-n+3) { border-bottom: none; }
+.area-card:hover { background: var(--surface2); }
+.ac-num {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.ac-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+.ac-body { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.ac-status {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.ac-status.critical { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+.ac-status.important { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
+.ac-status.validate { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
+.ac-status.track { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+
+/* ── Deep dive blocks ── */
+.dd-block {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.dd-header {
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.dd-header-left { flex: 1; }
+.dd-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.dd-q { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.35; }
+.dd-body { padding: 1.1rem 1.25rem; }
+.dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 640px) { .dd-grid { grid-template-columns: 1fr; } }
+
+/* ── Signal cards ── */
+.signal-card {
+  border-radius: 8px;
+  padding: .9rem 1rem;
+}
+.signal-card.green { background: var(--green-dim); border: 1px solid rgba(76,175,130,.25); }
+.signal-card.red { background: var(--red-dim); border: 1px solid rgba(224,92,74,.25); }
+.sc-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.signal-card.green .sc-label { color: var(--green); }
+.signal-card.red .sc-label { color: var(--red); }
+.sc-item {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.sc-item:last-child { border-bottom: none; }
+.signal-card.green .sc-item { color: #9ee8c4; }
+.signal-card.red .sc-item { color: #f5b0a4; }
+.sc-dot { flex-shrink: 0; margin-top: 5px; width: 5px; height: 5px; border-radius: 50%; }
+.signal-card.green .sc-dot { background: var(--green); }
+.signal-card.red .sc-dot { background: var(--red); }
+
+/* ── Experiment cards ── */
+.exp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 1.25rem; }
+.exp-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1.1rem;
+}
+.exp-num {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  margin-bottom: 5px;
+}
+.exp-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+.exp-objective { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.55; }
+.exp-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+.exp-metric { font-size: 12px; color: #a09890; margin-bottom: 3px; }
+.exp-metric strong { color: var(--gold-lt); }
+.exp-time {
+  margin-top: 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--blue);
+}
+.exp-cost { font-size: 11px; color: var(--green); margin-top: 2px; }
+
+/* ── Question list ── */
+.q-list { display: flex; flex-direction: column; gap: 0; margin-top: 1.25rem; }
+.q-row {
+  display: flex;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.q-row:last-child { border-bottom: none; }
+.q-priority {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  min-width: 72px;
+  padding-top: 2px;
+}
+.q-priority.p1 { color: var(--red); }
+.q-priority.p2 { color: var(--amber); }
+.q-priority.p3 { color: var(--blue); }
+.q-text { font-size: 13px; color: #c8c0b4; line-height: 1.55; flex: 1; }
+.q-why { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* ── Hypothesis table ── */
+.hyp-table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; font-size: 13px; }
+.hyp-table th {
+  text-align: left; padding: 9px 14px;
+  background: var(--surface2);
+  color: var(--muted);
+  font-size: 10px;
+  font-family: 'Fira Code', monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border2);
+}
+.hyp-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: #b0a898;
+  line-height: 1.5;
+}
+.hyp-table tr:last-child td { border-bottom: none; }
+.hyp-table tr:hover td { background: var(--surface2); }
+.conf-high { color: var(--red); font-family: 'Fira Code', monospace; font-size: 11px; }
+.conf-med { color: var(--amber); font-family: 'Fira Code', monospace; font-size: 11px; }
+.conf-low { color: var(--green); font-family: 'Fira Code', monospace; font-size: 11px; }
+.how-test { font-size: 11px; color: var(--blue); font-style: italic; }
+
+/* ── Score meter ── */
+.score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 1.25rem; }
+.score-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+.score-label { font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .07em; font-family: 'Fira Code', monospace; }
+.score-val { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; }
+.score-val.green { color: var(--green); }
+.score-val.amber { color: var(--amber); }
+.score-val.red { color: var(--red); }
+.score-max { font-size: 12px; color: var(--muted); }
+.score-bar { height: 4px; background: var(--border2); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 2px; }
+
+/* ── Decision gate ── */
+.gate {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 1.75rem;
+  margin-top: 2rem;
+}
+.gate-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; margin-bottom: .75rem; }
+.gate-intro { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.gate-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .gate-grid { grid-template-columns: 1fr; } }
+.gate-col { border-radius: 10px; padding: 1rem; }
+.gate-col.go { background: var(--green-dim); border: 1px solid rgba(76,175,130,.3); }
+.gate-col.pause { background: var(--amber-dim); border: 1px solid rgba(232,148,58,.3); }
+.gate-col.stop { background: var(--red-dim); border: 1px solid rgba(224,92,74,.3); }
+.gate-col-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.gate-col.go .gate-col-title { color: var(--green); }
+.gate-col.pause .gate-col-title { color: var(--amber); }
+.gate-col.stop .gate-col-title { color: var(--red); }
+.gate-item { font-size: 12px; line-height: 1.55; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.gate-item:last-child { border-bottom: none; }
+.gate-col.go .gate-item { color: #9ee8c4; }
+.gate-col.pause .gate-item { color: #f5d4a4; }
+.gate-col.stop .gate-item { color: #f5b0a4; }
+
+/* ── Closing ── */
+.closing {
+  margin-top: 3rem;
+  padding: 2.5rem;
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid var(--gold);
+  text-align: center;
+}
+.closing-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold-lt); margin-bottom: 1rem; }
+.closing-body { font-size: 15px; color: #a09890; line-height: 1.8; max-width: 640px; margin: 0 auto; }
+.closing-body strong { color: #e8e4db; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">CareGuard · Debida Diligencia del Fundador</div>
+    <h1 class="hero-title">Lo que debes saber<br><span>antes de construir</span><br>una sola línea de código</h1>
+    <p class="hero-sub">La debida diligencia del fundador no es un trámite — es el trabajo más importante que harás. Su función es una sola: darte certeza de que el problema es real, el mercado existe, y que tú eres la persona correcta para resolverlo antes de comprometer años de tu vida.</p>
+    <div class="hero-tag">Perspectiva: fundador · Etapa: pre-producto · 6 áreas · 30 preguntas esenciales</div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <div class="verdict">
+    <div class="verdict-icon">◈</div>
+    <div>
+      <div class="verdict-title">El principio rector de esta debida diligencia</div>
+      <div class="verdict-body">En etapa pre-producto, la debida diligencia no valida tu idea — <strong>intenta matarla</strong>. Si después de hacerla bien la idea sobrevive, tienes una base sólida para construir. Si no sobrevive, ahorraste entre 2 y 5 años de tu vida. Ambos resultados son valiosos. El error fatal es hacer una DD superficial que confirme lo que ya crees.</div>
+    </div>
+  </div>
+
+  <!-- 6 AREAS OVERVIEW -->
+  <div class="section">
+    <div class="sec-eyebrow">Mapa de la debida diligencia</div>
+    <div class="sec-title">6 áreas críticas — ninguna es opcional</div>
+    <div class="sec-body">Cada área tiene preguntas que debes poder responder con evidencia, no con intuición. Si en alguna área no tienes respuestas, eso es lo que vas a buscar primero.</div>
+
+    <div class="areas">
+      <div class="area-card">
+        <div class="ac-num">01</div>
+        <div class="ac-title">Problema y cliente</div>
+        <div class="ac-body">¿El dolor es real, frecuente y lo suficientemente grande para pagar por resolverlo?</div>
+        <div class="ac-status critical">Crítico · hacer primero</div>
+      </div>
+      <div class="area-card">
+        <div class="ac-num">02</div>
+        <div class="ac-title">Mercado y tamaño</div>
+        <div class="ac-body">¿Cuántas personas tienen este problema y cuánto cuesta hoy no resolverlo?</div>
+        <div class="ac-status critical">Crítico · hacer primero</div>
+      </div>
+      <div class="area-card">
+        <div class="ac-num">03</div>
+        <div class="ac-title">Competencia y posicionamiento</div>
+        <div class="ac-body">¿Por qué no existe esto ya? ¿Qué saben los competidores que tú no sabes todavía?</div>
+        <div class="ac-status important">Importante · semana 2</div>
+      </div>
+      <div class="area-card">
+        <div class="ac-num">04</div>
+        <div class="ac-title">Modelo de negocio</div>
+        <div class="ac-body">¿Las personas pagarán lo que necesitas cobrar para tener un negocio sano?</div>
+        <div class="ac-status important">Importante · semana 2</div>
+      </div>
+      <div class="area-card">
+        <div class="ac-num">05</div>
+        <div class="ac-title">Capacidad del fundador</div>
+        <div class="ac-body">¿Tienes o puedes conseguir lo que se necesita para ejecutar esto específicamente?</div>
+        <div class="ac-status validate">Validar · semana 3</div>
+      </div>
+      <div class="area-card">
+        <div class="ac-num">06</div>
+        <div class="ac-title">Riesgos estructurales</div>
+        <div class="ac-body">¿Hay algo que podría hacer que este negocio sea imposible sin importar qué tan bien ejecutes?</div>
+        <div class="ac-status validate">Validar · semana 3</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Área 01">
+
+  <!-- AREA 1: PROBLEMA -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 01 · Problema y cliente</div>
+    <div class="sec-title">¿El dolor es real o proyectado?</div>
+    <div class="sec-body">La trampa más común del fundador es enamorarse de su solución antes de entender profundamente el problema. Para CareGuard, debes salir de tu escritorio y hablar con 30 familias antes de escribir una sola línea de código.</div>
+
+    <div class="dd-block">
+      <div class="dd-header">
+        <div class="dd-header-left">
+          <div class="dd-label">Pregunta central</div>
+          <div class="dd-q">¿Las familias con padres mayores realmente sienten este dolor lo suficientemente fuerte como para cambiar su comportamiento y pagar por resolverlo?</div>
+        </div>
+      </div>
+      <div class="dd-body">
+        <div class="dd-grid">
+          <div class="signal-card green">
+            <div class="sc-label">Señales que confirman el problema</div>
+            <div class="sc-item"><div class="sc-dot"></div><div>La persona interrumpe sus actividades para llamar a verificar que su familiar está bien</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Ha habido al menos un incidente real (caída, desorientación, emergencia) en la familia</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Ya gasta dinero en alguna solución parcial (cuidador ocasional, llamadas diarias, cámaras)</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Describe el problema espontáneamente sin que le preguntes directamente sobre tecnología</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Dice haber buscado soluciones y no haber encontrado nada satisfactorio</div></div>
+          </div>
+          <div class="signal-card red">
+            <div class="sc-label">Señales de alerta — el problema no es tan real</div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Solo expresa preocupación cuando se le pregunta directamente — no lo menciona solo</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Dice "es una buena idea" pero no puede describir un incidente concreto que lo haya afectado</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>El adulto mayor rechaza la idea cuando se le pregunta directamente</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>La familia ya resolvió el problema con un cuidador o familiar cercano que vive con ellos</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>El dolor aparece solo ante escenarios hipotéticos, no ante experiencias pasadas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-list">
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Cuándo fue la última vez que te despertaste en la noche pensando en tu padre/madre? ¿Qué pasó?</div>
+          <div class="q-why">Busca evidencia de dolor visceral y recurrente — si no existe, el problema no es urgente.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Qué harías si mañana te dijeran que no puedes llamarle por 30 días? ¿Cómo resolverías eso?</div>
+          <div class="q-why">Revela si ya existe un workaround — y cuánto cuesta ese workaround en dinero o tiempo.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">Si existiera una app que te diera certeza de que tu familiar está bien cada día, ¿cuánto pagarías? ¿Por qué esa cifra y no el doble?</div>
+          <div class="q-why">La segunda pregunta es clave — si no saben justificar el precio, la disposición a pagar no es real.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿Qué soluciones has intentado ya? ¿Por qué no funcionaron?</div>
+          <div class="q-why">Los intentos fallidos son la mejor evidencia de que el problema es real y aún sin resolver.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿Tu familiar aceptaría sensores en su casa? ¿Se lo has preguntado directamente?</div>
+          <div class="q-why">El "cliente oculto" — el adulto mayor — puede ser el bloqueador real de la adopción.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p3">P3 · Validar</div>
+        <div>
+          <div class="q-text">¿Quiénes más en tu familia comparten esta preocupación? ¿Tendrías que convencerlos o ya lo sienten también?</div>
+          <div class="q-why">Detecta si el suscriptor puede ser un "conector familiar" que arrastra a hermanos — clave para el modelo referral.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict ok" style="margin-top:1.5rem">
+      <div class="verdict-icon">✓</div>
+      <div>
+        <div class="verdict-title">Meta de esta área: 30 conversaciones en 3 semanas</div>
+        <div class="verdict-body">No encuestas online. Conversaciones reales, de 20–40 minutos, con familias que tienen padres mayores viviendo solos o con condiciones de salud. Al menos 10 deben ser familias con padres en LATAM y el hijo en EE.UU. Si después de 30 conversaciones no tienes 5 personas que te digan "¿cuándo puedo tenerlo?", reconsidera la hipótesis central.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Área 02">
+
+  <!-- AREA 2: MERCADO -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 02 · Mercado y tamaño</div>
+    <div class="sec-title">¿Hay suficientes personas con este problema?</div>
+
+    <div class="dd-block">
+      <div class="dd-header">
+        <div class="dd-header-left">
+          <div class="dd-label">El cálculo de mercado que importa</div>
+          <div class="dd-q">No el TAM teórico — el mercado accesible real en los primeros 24 meses con menos de $50K de presupuesto.</div>
+        </div>
+      </div>
+      <div class="dd-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:1rem">
+          <div style="background:var(--surface2);border-radius:8px;padding:1rem;text-align:center">
+            <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--muted);margin-bottom:4px">Latinos en EE.UU. (35–55 años)</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff">~18M</div>
+            <div style="font-size:11px;color:var(--muted)">Con padres fuera del país</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:1rem;text-align:center">
+            <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--muted);margin-bottom:4px">Con padre/madre &gt;65 años solo</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;color:#fff">~4M</div>
+            <div style="font-size:11px;color:var(--muted)">Segmento de máxima urgencia</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:1rem;text-align:center">
+            <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--muted);margin-bottom:4px">Beachhead realista (año 1–2)</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold)">~40K</div>
+            <div style="font-size:11px;color:var(--muted)">Miami, Houston, NYC, LA</div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:1rem;text-align:center">
+            <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--muted);margin-bottom:4px">Revenue máximo beachhead</div>
+            <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--green)">$8M</div>
+            <div style="font-size:11px;color:var(--muted)">ARR a 10% penetración</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#a09890;line-height:1.7">La pregunta correcta no es "¿cuán grande es el mercado de cuidado de adultos mayores?" (es enorme pero irrelevante). Es: <strong style="color:#e8e4db">¿cuántas familias en Miami, Houston y NYC tienen exactamente este problema, tienen la disposición a pagar $19/mes, y pueden descubrir CareGuard con un presupuesto de $50K?</strong> Ese número — alrededor de 40,000 — es el mercado real de los primeros 24 meses.</div>
+      </div>
+    </div>
+
+    <div class="q-list">
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Existe evidencia de demanda activa? (búsquedas en Google, grupos de Facebook, posts en Reddit donde familias buscan soluciones para este problema)</div>
+          <div class="q-why">Valida que la gente busca activamente — no solo que tiene el problema pasivamente.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Cuánto gasta hoy el segmento objetivo en soluciones parciales (cuidadores, llamadas, visitas frecuentes)? ¿Es $19/mes ridiculamente barato comparado con eso?</div>
+          <div class="q-why">Si ya gastan $200+/mes en workarounds, $19 es una ganga y el willingness to pay está probado.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿Cuántos adultos mayores viven solos en Colombia, México y Chile en hogares con acceso a WiFi confiable? ¿Qué porcentaje de ellos tiene hijos que les pagan servicios digitales actualmente?</div>
+          <div class="q-why">El WiFi confiable y la disposición a pagar servicios digitales son prerequisitos técnicos del producto.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿El mercado está creciendo? ¿Hay más adultos mayores solos hoy que hace 5 años en estos países?</div>
+          <div class="q-why">Un mercado creciente perdona errores de ejecución — un mercado estático o contrayente no.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Área 03">
+
+  <!-- AREA 3: COMPETENCIA -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 03 · Competencia y posicionamiento</div>
+    <div class="sec-title">La pregunta incómoda: ¿por qué no existe esto ya?</div>
+    <div class="sec-body">Cuando una idea parece obvia y no existe, hay tres posibilidades: (A) nadie lo ha intentado todavía, (B) alguien lo intentó y falló por razones que debes entender, o (C) el problema no es tan grande como parece. Debes saber cuál es tu caso.</div>
+
+    <table class="hyp-table">
+      <thead>
+        <tr>
+          <th style="width:28%">Hipótesis a investigar</th>
+          <th style="width:15%;text-align:center">Nivel de riesgo si es verdad</th>
+          <th style="width:35%">Cómo verificarla</th>
+          <th style="width:22%">Qué hacer si se confirma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Life Alert / Medical Guardian ya resuelven esto"</td>
+          <td style="text-align:center"><span class="conf-low">BAJO</span></td>
+          <td><span class="how-test">Comprar un plan de Life Alert por 1 mes y usarlo. Entrevistar a 5 familias que lo hayan probado.</span></td>
+          <td style="font-size:12px;color:#b0a898">Confirma el gap: ellos requieren que el mayor presione el botón. CareGuard es pasivo. Diferenciación clara.</td>
+        </tr>
+        <tr>
+          <td>"Ring / Nest cameras ya hacen esto"</td>
+          <td style="text-align:center"><span class="conf-low">BAJO</span></td>
+          <td><span class="how-test">Preguntar en 20 entrevistas si ya usan cámaras. ¿Por qué las dejaron? ¿El mayor las rechazó?</span></td>
+          <td style="font-size:12px;color:#b0a898">El rechazo del mayor a las cámaras es el moat de privacidad de CareGuard. Documentar estos casos.</td>
+        </tr>
+        <tr>
+          <td>"Alguien ya intentó esto para el mercado latino y falló"</td>
+          <td style="text-align:center"><span class="conf-med">MEDIO</span></td>
+          <td><span class="how-test">Buscar en Crunchbase, CB Insights y LinkedIn startups en "elder care LATAM". Hablar con sus fundadores si es posible.</span></td>
+          <td style="font-size:12px;color:#b0a898">Entender por qué fallaron. Si fue por distribución/timing, puede ser recuperable. Si fue por falta de willingness to pay, es señal crítica.</td>
+        </tr>
+        <tr>
+          <td>"Una empresa grande (Google, Amazon) puede lanzar esto mañana"</td>
+          <td style="text-align:center"><span class="conf-med">MEDIO</span></td>
+          <td><span class="how-test">Analizar si Amazon Care, Google Nest o Apple ya tienen hojas de ruta en elder care. Revisar sus patentes y contrataciones recientes.</span></td>
+          <td style="font-size:12px;color:#b0a898">Moverse rápido al nicho diaspora/LATAM — las grandes empresas no localizarán para este segmento específico.</td>
+        </tr>
+        <tr>
+          <td>"El adulto mayor rechaza sistemáticamente cualquier monitoreo"</td>
+          <td style="text-align:center"><span class="conf-high">ALTO</span></td>
+          <td><span class="how-test">Entrevistar directamente a 10 adultos mayores (no a sus hijos). ¿Cómo reaccionan ante la descripción del producto?</span></td>
+          <td style="font-size:12px;color:#b0a898">Si la tasa de rechazo es alta, el modelo de negocio no funciona. Requiere rediseño fundamental del producto.</td>
+        </tr>
+        <tr>
+          <td>"La conectividad WiFi en LATAM hace el producto impracticable"</td>
+          <td style="text-align:center"><span class="conf-high">ALTO</span></td>
+          <td><span class="how-test">Verificar datos de penetración de banda ancha en hogares de adultos mayores en Colombia, México y Chile por NSE.</span></td>
+          <td style="font-size:12px;color:#b0a898">Si la penetración es baja, el mercado LATAM está sobreestimado. Ajustar proyecciones o buscar modelo offline-first.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider" data-label="Área 04">
+
+  <!-- AREA 4: BUSINESS MODEL -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 04 · Modelo de negocio</div>
+    <div class="sec-title">¿Las personas pagarán lo que necesitas cobrar?</div>
+
+    <div class="dd-block">
+      <div class="dd-header">
+        <div class="dd-header-left">
+          <div class="dd-label">La prueba de willingness to pay</div>
+          <div class="dd-q">No preguntes "¿pagarías por esto?" — pregunta "¿me das tu tarjeta ahora?" La diferencia en la respuesta es la diferencia entre un negocio y un hobby.</div>
+        </div>
+      </div>
+      <div class="dd-body">
+        <div style="font-size:13px;color:#a09890;line-height:1.8;margin-bottom:1rem">
+          El experimento más honesto que puedes hacer antes de construir el producto: <strong style="color:#e8e4db">crea una landing page con un botón de "pre-order" a $99 (hardware) + $19/mes, conecta Stripe, y lanza $500 en Meta Ads.</strong> Si nadie hace click en "comprar", tienes información más valiosa que cualquier encuesta.
+        </div>
+        <div class="dd-grid">
+          <div class="signal-card green">
+            <div class="sc-label">Señales de willingness to pay real</div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Piden comprar durante la entrevista antes de que el producto exista</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Ya pagan por servicios de tranquilidad similares (seguro del hogar, cámara, cuidador)</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>La conversión en landing page supera el 2% en el segmento correcto</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Ofrecen pagar más de $19 espontáneamente</div></div>
+          </div>
+          <div class="signal-card red">
+            <div class="sc-label">Señales de willingness to pay falsa</div>
+            <div class="sc-item"><div class="sc-dot"></div><div>"Yo pagaría, pero mi mamá no lo aceptaría" — el pagador no controla la decisión</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Solo quieren pagar si "es muy barato" — sin definir qué es barato</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>Dicen que pagarían pero cuando se les pide dejar su email para ser contactados, no lo dejan</div></div>
+            <div class="sc-item"><div class="sc-dot"></div><div>El familiar que vive con el mayor no ve la necesidad — bloqueará la compra</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-list">
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Cuál es el "momento de verdad" en el que la familia decide gastar dinero en esto? ¿Necesita pasar un incidente primero?</div>
+          <div class="q-why">Si la compra requiere un incidente previo, el TAM se reduce dramáticamente — solo alcanzas a familias reactivas, no preventivas.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Quién tiene la autoridad de compra en la familia? ¿El hijo que vive lejos, el que vive cerca, o el propio adulto mayor?</div>
+          <div class="q-why">Determina el mensaje de marketing, el canal de adquisición y la fricción de la venta.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿Cuánto tiempo lleva la decisión de compra? ¿Es una compra impulsiva o requiere convencer a múltiples familiares?</div>
+          <div class="q-why">Ciclos de venta largos matan el CAC. Si se necesita consenso familiar, hay que diseñar el onboarding para ese caso.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿La suscripción se cancela si el adulto mayor muere, se muda a una residencia o mejora su condición? ¿Qué tan estable es la base de clientes?</div>
+          <div class="q-why">Define el churn estructural del negocio — si los clientes "expiran" naturalmente, el modelo tiene un techo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Área 05">
+
+  <!-- AREA 5: FOUNDER FIT -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 05 · Capacidad del fundador</div>
+    <div class="sec-title">La DD más incómoda: ¿eres tú la persona correcta?</div>
+    <div class="sec-body">La mayoría de los fundadores hacen due diligence del mercado pero no de sí mismos. Este es el análisis más honesto y el más importante — porque el mercado puede ser perfecto y el producto posible, pero si no tienes lo que se necesita para ejecutarlo, todo lo demás es irrelevante.</div>
+
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 01</div>
+        <div class="exp-title">Conexión con el problema</div>
+        <div class="exp-objective">¿Tienes experiencia personal con el cuidado de un adulto mayor? ¿Viviste el dolor que intentas resolver?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Por qué importa: los fundadores que resuelven problemas que vivieron tienen <strong>3–5x más resiliencia</strong> cuando el producto no funciona. El "por qué" personal es el combustible cuando todo es difícil.</div>
+        <div class="exp-time">Pregúntate: ¿puedo hablar 2 horas sobre este problema sin prepararme?</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 02</div>
+        <div class="exp-title">Acceso al cliente</div>
+        <div class="exp-objective">¿Tienes acceso orgánico a 50 familias con este problema en las próximas 4 semanas?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Por qué importa: sin acceso a clientes reales en etapa temprana, <strong>el producto se construye sobre suposiciones</strong>. El distribuidor que llega a 50 familias en semana 1 le gana al mejor ingeniero que tarda 3 meses en conseguirlas.</div>
+        <div class="exp-time">Pregúntate: ¿a cuántas familias puedo llamar hoy sin que sea frío?</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 03</div>
+        <div class="exp-title">Capacidad técnica del equipo</div>
+        <div class="exp-objective">¿El equipo fundador puede construir la v1 sin contratar a nadie externo?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">CareGuard requiere: app móvil React Native, backend Node.js/AWS, integración IoT, y lógica de alertas. Un CTO con <strong>Python + AWS + React Native</strong> puede construir la v1 de reglas en 6–8 semanas. Sin eso, el costo de desarrollo externo supera el presupuesto.</div>
+        <div class="exp-time">Pregúntate: ¿puedo tener un prototipo funcional en 8 semanas?</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 04</div>
+        <div class="exp-title">Tolerancia real al riesgo</div>
+        <div class="exp-objective">¿Puedes vivir 18–24 meses sin ingreso estable mientras el negocio no genera suficiente?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">El modelo proyecta MRR de $2,550 en mes 3 y $17,000 al final del año 1. Con 3 fundadores a $20K/año cada uno, <strong>el break-even personal es $5,000 MRR</strong>. El tiempo hasta ahí es 4–6 meses de burn personal.</div>
+        <div class="exp-time">Pregúntate: ¿qué pasa en mi vida si en 18 meses no funciona?</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 05</div>
+        <div class="exp-title">Complementariedad del equipo</div>
+        <div class="exp-objective">¿El equipo cubre los tres roles críticos: producto/CEO, tecnología/CTO y growth/ventas?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">El error clásico es 3 ingenieros sin nadie que venda, o 3 vendedores sin nadie que construya. CareGuard necesita los tres sombreros cubiertos desde el día 1. <strong>El hueco más frecuente es el rol de growth</strong> — quien habla con clientes y ejecuta las campañas.</div>
+        <div class="exp-time">Pregúntate: ¿quién hace qué si hay que lanzar en 30 días?</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Dimensión 06</div>
+        <div class="exp-title">Credibilidad en el segmento</div>
+        <div class="exp-objective">¿Por qué te creerían las primeras 100 familias? ¿Qué da CareGuard confianza?</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">En un producto de seguridad para adultos vulnerables, la confianza es el diferenciador más importante. <strong>Origen cultural, experiencia personal, o credenciales del equipo</strong> en salud o tecnología son activos reales. Sin ellos, hay que construirlos deliberadamente.</div>
+        <div class="exp-time">Pregúntate: ¿por qué debería confiarme los datos de mi madre a ti?</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Área 06">
+
+  <!-- AREA 6: STRUCTURAL RISKS -->
+  <div class="section">
+    <div class="sec-eyebrow">Área 06 · Riesgos estructurales</div>
+    <div class="sec-title">Las cosas que pueden hacer el negocio imposible sin importar qué tan bien ejecutes</div>
+
+    <div class="q-list">
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Qué pasa si un adulto mayor fallece y la familia demanda a CareGuard porque la app no generó una alerta?</div>
+          <div class="q-why">La responsabilidad por fallas de seguridad en productos para personas vulnerables puede ser existencial. Los ToS deben delimitarla claramente desde el inicio.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿Amazon, Google o Apple podrían incluir esta funcionalidad en sus productos actuales (Echo, Nest, Apple Watch) en los próximos 18 meses?</div>
+          <div class="q-why">Si sí, el tiempo para construir el moat (datos per-user + comunidad diaspora) se comprime dramáticamente.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p1">P1 · Crítica</div>
+        <div>
+          <div class="q-text">¿La cadena de suministro de sensores IoT puede garantizar disponibilidad a precios estables? ¿Qué pasó con los precios durante los shocks de supply chain 2021–2023?</div>
+          <div class="q-why">Si el BOM del hardware sube de $45 a $80 por un shock global, el modelo financiero se rompe.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿La penetración de WiFi en hogares de adultos mayores de clase media en Colombia, México y Chile es suficiente para el modelo LATAM?</div>
+          <div class="q-why">Si menos del 50% de los hogares objetivo tienen WiFi confiable, el mercado LATAM directo está sobreestimado por un factor de 2x.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p2">P2 · Importante</div>
+        <div>
+          <div class="q-text">¿Regulaciones de salud digital en LATAM podrían exigir certificación de dispositivos médicos si CareGuard crece a detectar condiciones de salud específicas?</div>
+          <div class="q-why">El camino de "monitoreo del hogar" a "dispositivo médico" está regulado. Cruzar esa línea sin saberlo puede resultar en una orden de cese de operaciones.</div>
+        </div>
+      </div>
+      <div class="q-row">
+        <div class="q-priority p3">P3 · Validar</div>
+        <div>
+          <div class="q-text">¿Cuál es la tasa real de churn estructural? ¿Cuántos clientes "expiran" al año porque el adulto mayor muere, se muda o ya no necesita el servicio?</div>
+          <div class="q-why">Si la tasa de expiración natural es del 15–20% anual, la empresa necesita crecer más rápido solo para mantenerse plana.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="Los experimentos">
+
+  <!-- VALIDATION EXPERIMENTS -->
+  <div class="section">
+    <div class="sec-eyebrow">Plan de validación</div>
+    <div class="sec-title">5 experimentos que responden todo — en 60 días, con menos de $3,000</div>
+    <div class="sec-body">Cada experimento está diseñado para fallar rápido si la hipótesis es incorrecta. Si todos pasan, tienes el nivel mínimo de certeza para comprometer tu tiempo y dinero.</div>
+
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-num">Experimento 01 · Semanas 1–2</div>
+        <div class="exp-title">Las 30 conversaciones</div>
+        <div class="exp-objective">Validar que el dolor es real, frecuente y lo suficientemente intenso para cambiar comportamiento.</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Método: entrevistas de 25 min con familias Latino-US y familias locales LATAM. Sin mencionar el producto hasta el final. Solo preguntar sobre el problema.</div>
+        <div class="exp-metric" style="margin-top:6px">Métrica de éxito: <strong>Al menos 20 de 30 describen un incidente específico espontáneamente.</strong></div>
+        <div class="exp-time">Tiempo: 2 semanas</div>
+        <div class="exp-cost">Costo: $0 — solo tiempo</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Experimento 02 · Semana 3</div>
+        <div class="exp-title">La landing page con Stripe</div>
+        <div class="exp-objective">Validar willingness to pay real antes de construir nada.</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Método: landing page con descripción del producto, precio real ($99 kit + $19/mo) y botón de "Pre-ordenar". $500 en Meta Ads al segmento correcto. Medir clicks en el botón de compra.</div>
+        <div class="exp-metric" style="margin-top:6px">Métrica de éxito: <strong>Conversión al botón de compra &gt;2% del tráfico segmentado.</strong></div>
+        <div class="exp-time">Tiempo: 5 días para setup</div>
+        <div class="exp-cost">Costo: ~$600 (ads + Webflow + Stripe)</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Experimento 03 · Semana 3</div>
+        <div class="exp-title">La entrevista con el adulto mayor</div>
+        <div class="exp-objective">Validar que el adulto mayor acepta el producto — el cliente oculto más importante.</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Método: describir el producto (sensores, sin cámara) a 10 adultos mayores directamente. Registrar reacciones. ¿Lo aceptan? ¿Ponen condiciones? ¿Lo rechazan de plano?</div>
+        <div class="exp-metric" style="margin-top:6px">Métrica de éxito: <strong>Al menos 7 de 10 expresan aceptación (aunque con condiciones).</strong></div>
+        <div class="exp-time">Tiempo: 1 semana</div>
+        <div class="exp-cost">Costo: $0 — solo acceso</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Experimento 04 · Semana 4</div>
+        <div class="exp-title">El prototipo de papel (Wizard of Oz)</div>
+        <div class="exp-objective">Simular el producto manualmente para validar que el concepto funciona antes de construir la tecnología.</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Método: instalar sensores comerciales baratos (Xiaomi/Aqara ~$15 c/u) en el hogar de una familia voluntaria. Monitorear manualmente y enviar WhatsApp con el "resumen diario" a mano. Por 2 semanas.</div>
+        <div class="exp-metric" style="margin-top:6px">Métrica de éxito: <strong>La familia dice que el servicio les da paz mental. NPS &gt;8.</strong></div>
+        <div class="exp-time">Tiempo: 2 semanas operación</div>
+        <div class="exp-cost">Costo: ~$150 en sensores</div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-num">Experimento 05 · Semanas 5–8</div>
+        <div class="exp-title">El MVP de reglas (sin ML)</div>
+        <div class="exp-objective">Validar que el producto tecnológico básico funciona y que las familias lo usan activamente.</div>
+        <div class="exp-divider"></div>
+        <div class="exp-metric">Método: construir la v1 de reglas deterministas (sin ML) en AWS Lambda. Desplegar con 10 familias beta. Cobrar $9/mes desde el día 1. Medir retención a 30 días.</div>
+        <div class="exp-metric" style="margin-top:6px">Métrica de éxito: <strong>8 de 10 familias beta siguen activas a los 30 días y al menos 3 refieren a alguien.</strong></div>
+        <div class="exp-time">Tiempo: 4–6 semanas desarrollo</div>
+        <div class="exp-cost">Costo: ~$800 infra + tiempo dev</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" data-label="El veredicto">
+
+  <!-- SCORE SECTION -->
+  <div class="section">
+    <div class="sec-eyebrow">Scorecard de la debida diligencia</div>
+    <div class="sec-title">Cómo evaluar los resultados — antes de comprometer más</div>
+    <div class="sec-body">Después de completar los 5 experimentos y las 6 áreas de análisis, puntúa cada dimensión. La suma determina la decisión correcta.</div>
+
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-label">Intensidad del dolor</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 7</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Willingness to pay</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 7</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Aceptación del mayor</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 6</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Fit del fundador</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 7</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Ventaja competitiva</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 6</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Ausencia de blockers</div>
+        <div class="score-val amber">__/10</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Min. aceptable: 7</div>
+        <div class="score-bar"><div class="score-fill" style="width:0%;background:var(--amber)"></div></div>
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-title">El semáforo de la decisión</div>
+      <div class="gate-intro">Basado en el score total y en las señales cualitativas de cada área, la decisión correcta cae en una de estas tres categorías:</div>
+      <div class="gate-grid">
+        <div class="gate-col go">
+          <div class="gate-col-title">AVANZAR</div>
+          <div class="gate-item">Score total ≥ 42/60</div>
+          <div class="gate-item">Ninguna área crítica por debajo de 6</div>
+          <div class="gate-item">Al menos 5 personas pidieron comprar durante entrevistas</div>
+          <div class="gate-item">El adulto mayor acepta en ≥7/10 entrevistas</div>
+          <div class="gate-item">Retención beta ≥80% a 30 días</div>
+          <div class="gate-item">→ Comprometer tiempo completo y presupuesto</div>
+        </div>
+        <div class="gate-col pause">
+          <div class="gate-col-title">AJUSTAR PRIMERO</div>
+          <div class="gate-item">Score 30–41/60</div>
+          <div class="gate-item">1–2 áreas por debajo del mínimo</div>
+          <div class="gate-item">El problema existe pero el segmento es diferente al esperado</div>
+          <div class="gate-item">Willingness to pay existe pero a un precio más bajo</div>
+          <div class="gate-item">→ Pivotar hipótesis y re-validar antes de construir</div>
+        </div>
+        <div class="gate-col stop">
+          <div class="gate-col-title">NO AVANZAR AÚN</div>
+          <div class="gate-item">Score &lt;30/60</div>
+          <div class="gate-item">Área crítica (dolor o willingness to pay) &lt;5</div>
+          <div class="gate-item">El adulto mayor rechaza sistemáticamente</div>
+          <div class="gate-item">Existe un competidor que ya resuelve esto bien</div>
+          <div class="gate-item">→ El tiempo y el dinero tienen mejor uso en otra idea</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-title">La debida diligencia es un regalo, no una obligación</div>
+    <div class="closing-body">
+      Cada hora que inviertes en validar antes de construir te da algo que no se puede comprar después: <strong>certeza</strong>. No la certeza de que va a funcionar — eso no existe. La certeza de que el problema es real, que la gente pagaría, y que tú tienes lo necesario para intentarlo.<br><br>
+      El fundador que llega al primer inversor con <strong>30 conversaciones documentadas, una tasa de conversión del 2.3% en su landing page, y 10 familias beta con NPS de 8.4</strong> está en un mundo diferente al que llega con una presentación pulida y ningún cliente. Ese trabajo previo es la debida diligencia hecha correctamente.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
